@@ -11,7 +11,7 @@
 
 // Example of the correct format is shown below
 
-#include <pgmspace.h>  // PROGMEM support header
+#include <avr/pgmspace.h>  // PROGMEM support header
 
 // Espressif logo 50 x 50 pixel array in XBM format
 #define logoWidth  50  // logo width

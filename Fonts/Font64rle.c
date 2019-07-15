@@ -7,7 +7,12 @@
 // All other characters print as a space
 
 
-#include <pgmspace.h>
+#if defined(KENDRYTE_K210) || defined(ARDUINO_ARCH_SAMD)
+  #include <avr/pgmspace.h>
+#else
+  #include <pgmspace.h>
+#endif
+
 
 
 PROGMEM const unsigned char widtbl_f64[96] =          // character width table

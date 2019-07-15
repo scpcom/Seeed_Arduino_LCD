@@ -1,6 +1,10 @@
 // Font 2
 
-#include <pgmspace.h>
+#if defined(KENDRYTE_K210) || defined(ARDUINO_ARCH_SAMD)
+  #include <avr/pgmspace.h>
+#else
+  #include <pgmspace.h>
+#endif
 
 // Width has been increased by 1 pixel so pixel lengths are calculated correctly
 // for the displayed string

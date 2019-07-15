@@ -4,7 +4,11 @@
 //
 // This font contains 96 ASCII characters
 
-#include <pgmspace.h>
+#if defined(KENDRYTE_K210) || defined(ARDUINO_ARCH_SAMD)
+  #include <avr/pgmspace.h>
+#else
+  #include <pgmspace.h>
+#endif
 
 
 PROGMEM const unsigned char widtbl_f32[96] =         // character width table

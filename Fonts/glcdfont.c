@@ -3,7 +3,13 @@
 #ifndef FONT5X7_H
 #define FONT5X7_H
 
-#include <pgmspace.h>
+
+#if defined(KENDRYTE_K210) || defined(ARDUINO_ARCH_SAMD)
+  #include <avr/pgmspace.h>
+#else
+  #include <pgmspace.h>
+#endif
+
 
 // Standard ASCII 5x7 font
 
