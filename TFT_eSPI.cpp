@@ -37,8 +37,16 @@ void busDir(uint32_t mask, uint8_t mode);
 
 inline void TFT_eSPI::spi_begin(void){
 #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) 
-  if (locked) {locked = false; _spi.beginTransaction(SPISettings(SPI_FREQUENCY, MSBFIRST, TFT_SPI_MODE)); CS_L;} 
-#else
+  if (locked) {
+    locked = false; 
+    #ifdef KENDRYTE_K210
+    _spi.beginTransaction(SPISettings(SPI_FREQUENCY, LSBFIRST, TFT_SPI_MODE));
+  #else
+    _spi.beginTransaction(SPISettings(SPI_FREQUENCY, MSBFIRST, TFT_SPI_MODE));
+  #endif
+    CS_L;
+    } 
+
   CS_L;
 #endif
 }
@@ -53,7 +61,15 @@ inline void TFT_eSPI::spi_end(void){
 
 inline void TFT_eSPI::spi_begin_read(void){
 #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
-  if (locked) {locked = false; _spi.beginTransaction(SPISettings(SPI_READ_FREQUENCY, MSBFIRST, TFT_SPI_MODE)); CS_L;}
+  if (locked) {
+  locked = false; 
+  #ifdef KENDRYTE_K210
+    _spi.beginTransaction(SPISettings(SPI_READ_FREQUENCY, LSBFIRST, TFT_SPI_MODE));
+  #else
+    _spi.beginTransaction(SPISettings(SPI_READ_FREQUENCY, MSBFIRST, TFT_SPI_MODE));
+  #endif
+   CS_L;
+   }
 #else
    CS_L;
 #endif
@@ -73,7 +89,14 @@ inline void TFT_eSPI::spi_end_read(void){
    CS_H; // Just in case it has been left low
 
   #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
-    if (locked) {locked = false; _spi.beginTransaction(SPISettings(SPI_TOUCH_FREQUENCY, MSBFIRST, SPI_MODE0));}
+    if (locked) {
+      locked = false; 
+      #ifdef KENDRYTE_K210
+      _spi.beginTransaction(SPISettings(SPI_READ_FREQUENCY, LSBFIRST, TFT_SPI_MODE));
+      #else
+      _spi.beginTransaction(SPISettings(SPI_READ_FREQUENCY, MSBFIRST, TFT_SPI_MODE));
+      #endif
+      }
   #else
     //_spi.setFrequency(SPI_TOUCH_FREQUENCY);
   #endif
