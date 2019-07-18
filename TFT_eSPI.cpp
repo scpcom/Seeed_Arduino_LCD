@@ -16,6 +16,16 @@
 
 #include "TFT_eSPI.h"
 
+#ifdef TOUCH
+  #ifdef FOURWIRETOUCH
+   #include "Extensions\Touch_Drivers\4WiresTouch\defined.h"
+  #elif
+    #error Didn't support this Touch yet.
+  #else
+    #error Didn't support this Touch yet.
+  #endif
+#endif
+
 
 SPIClass& _spi = SPI;
 
@@ -1230,12 +1240,6 @@ bool TFT_eSPI::getSwapBytes(void)
 // If w and h are 1, then 1 pixel is read, *data array size must be 3 bytes per pixel
 void  TFT_eSPI::readRectRGB(int32_t x0, int32_t y0, int32_t w, int32_t h, uint8_t *data)
 {
-#if defined(ESP32_PARALLEL)
-
-  // ESP32 parallel bus supported yet
-
-#else  // Not ESP32_PARALLEL
-
   spi_begin_read();
 
   readAddrWindow(x0, y0, w, h); // Sets CS low
@@ -1279,7 +1283,6 @@ void  TFT_eSPI::readRectRGB(int32_t x0, int32_t y0, int32_t w, int32_t h, uint8_
 
   spi_end_read();
 
-#endif
 }
 
 
@@ -4160,7 +4163,7 @@ void TFT_eSPI::getSetup(setup_t &tft_settings)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#ifdef TOUCH_CS
+#ifdef TOUCH
   #include "Extensions/Touch.cpp"
   #include "Extensions/Button.cpp"
 #endif
@@ -4170,6 +4173,5 @@ void TFT_eSPI::getSetup(setup_t &tft_settings)
 #ifdef SMOOTH_FONT
   #include "Extensions/Smooth_font.cpp"
 #endif
-
 ////////////////////////////////////////////////////////////////////////////////////////
 

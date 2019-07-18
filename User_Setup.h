@@ -130,9 +130,9 @@
 #define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
 // For K210 - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
-#define TFT_CS   29  // Chip select control pin D8
-#define TFT_DC   25  // Data Command control pin
-#define TFT_RST  33  // Reset pin (could connect to NodeMCU RST, see next line)
+//#define TFT_CS   29  // Chip select control pin D8
+//#define TFT_DC   25  // Data Command control pin
+//#define TFT_RST  33  // Reset pin (could connect to NodeMCU RST, see next line)
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
 
@@ -209,3 +209,8 @@
 
  #define SUPPORT_TRANSACTIONS
  #define SPI_HAS_TRANSACTION
+
+ #define TOUCH
+ #define FOURWIRETOUCH
+
+

@@ -10,47 +10,19 @@
 
 // See license in root directory.
 
+
 /***************************************************************************************
 ** Function name:           getTouchRaw
 ** Description:             read raw touch position.  Always returns true.
 ***************************************************************************************/
 uint8_t TFT_eSPI::getTouchRaw(uint16_t *x, uint16_t *y){
-  uint16_t tmp;
-
-  spi_begin_touch();
+  #ifdef FOURWIRETOUCH
+    #include "Extensions\Touch_Drivers\4WiresTouch\getRaw.h"
+    *x = temp_x; *y=temp_y;
+  #else
+    #error Didn't support this Touch yet.
+  #endif
   
-  // Start YP sample request for x position, read 4 times and keep last sample
-  spi.transfer(0xd0);                    // Start new YP conversion
-  spi.transfer(0);                       // Read first 8 bits
-  spi.transfer(0xd0);                    // Read last 8 bits and start new YP conversion
-  spi.transfer(0);                       // Read first 8 bits
-  spi.transfer(0xd0);                    // Read last 8 bits and start new YP conversion
-  spi.transfer(0);                       // Read first 8 bits
-  spi.transfer(0xd0);                    // Read last 8 bits and start new YP conversion
-
-  tmp = spi.transfer(0);                   // Read first 8 bits
-  tmp = tmp <<5;
-  tmp |= 0x1f & (spi.transfer(0x90)>>3);   // Read last 8 bits and start new XP conversion
-
-  *x = tmp;
-
-  // Start XP sample request for y position, read 4 times and keep last sample
-  spi.transfer(0);                       // Read first 8 bits
-  spi.transfer(0x90);                    // Read last 8 bits and start new XP conversion
-  spi.transfer(0);                       // Read first 8 bits
-  spi.transfer(0x90);                    // Read last 8 bits and start new XP conversion
-  spi.transfer(0);                       // Read first 8 bits
-  spi.transfer(0x90);                    // Read last 8 bits and start new XP conversion
-
-  tmp = spi.transfer(0);                 // Read first 8 bits
-  tmp = tmp <<5;
-  tmp |= 0x1f & (spi.transfer(0)>>3);    // Read last 8 bits
-
-  *y = tmp;
-
-  spi_end_touch();
-
-  return true;
 }
 
 /***************************************************************************************
@@ -58,58 +30,25 @@ uint8_t TFT_eSPI::getTouchRaw(uint16_t *x, uint16_t *y){
 ** Description:             read raw pressure on touchpad and return Z value. 
 ***************************************************************************************/
 uint16_t TFT_eSPI::getTouchRawZ(void){
-
-  spi_begin_touch();
-
-  // Z sample request
-  int16_t tz = 0xFFF;
-  spi.transfer(0xb0);               // Start new Z1 conversion
-  tz += spi.transfer16(0xc0) >> 3;  // Read Z1 and start Z2 conversion
-  tz -= spi.transfer16(0x00) >> 3;  // Read Z2
-
-  spi_end_touch();
-
-  return (uint16_t)tz;
+  #ifdef FOURWIRETOUCH
+    #include "Extensions\Touch_Drivers\4WiresTouch\getRaw.h"
+    return (uint16_t)temp_z;
+  #else
+    #error Didn't support this Touch yet.
+  #endif
 }
 
 /***************************************************************************************
 ** Function name:           validTouch
 ** Description:             read validated position. Return false if not pressed. 
 ***************************************************************************************/
-#define _RAWERR 20 // Deadband error allowed in successive position samples
 uint8_t TFT_eSPI::validTouch(uint16_t *x, uint16_t *y, uint16_t threshold){
-  uint16_t x_tmp, y_tmp, x_tmp2, y_tmp2;
+  uint16_t x_tmp, y_tmp;
 
-  // Wait until pressure stops increasing to debounce pressure
-  uint16_t z1 = 1;
-  uint16_t z2 = 0;
-  while (z1 > z2)
-  {
-    z2 = z1;
-    z1 = getTouchRawZ();
-    delay(1);
-  }
-
-  //  Serial.print("Z = ");Serial.println(z1);
-
-  if (z1 <= threshold) return false;
-    
-  getTouchRaw(&x_tmp,&y_tmp);
-
-  //  Serial.print("Sample 1 x,y = "); Serial.print(x_tmp);Serial.print(",");Serial.print(y_tmp);
-  //  Serial.print(", Z = ");Serial.println(z1);
-
-  delay(1); // Small delay to the next sample
   if (getTouchRawZ() <= threshold) return false;
 
   delay(2); // Small delay to the next sample
-  getTouchRaw(&x_tmp2,&y_tmp2);
-  
-  //  Serial.print("Sample 2 x,y = "); Serial.print(x_tmp2);Serial.print(",");Serial.println(y_tmp2);
-  //  Serial.print("Sample difference = ");Serial.print(abs(x_tmp - x_tmp2));Serial.print(",");Serial.println(abs(y_tmp - y_tmp2));
-
-  if (abs(x_tmp - x_tmp2) > _RAWERR) return false;
-  if (abs(y_tmp - y_tmp2) > _RAWERR) return false;
+  getTouchRaw(&x_tmp,&y_tmp);
   
   *x = x_tmp;
   *y = y_tmp;
@@ -121,14 +60,13 @@ uint8_t TFT_eSPI::validTouch(uint16_t *x, uint16_t *y, uint16_t threshold){
 ** Function name:           getTouch
 ** Description:             read callibrated position. Return false if not pressed. 
 ***************************************************************************************/
-#define Z_THRESHOLD 350 // Touch pressure threshold for validating touches
 uint8_t TFT_eSPI::getTouch(uint16_t *x, uint16_t *y, uint16_t threshold){
   uint16_t x_tmp, y_tmp;
   
-  if (threshold<20) threshold = 20;
-  if (_pressTime > millis()) threshold=20;
+  if (threshold<10) threshold = 10;
+  if (_pressTime > millis()) threshold=10;
 
-  uint8_t n = 5;
+  uint8_t n = 1;
   uint8_t valid = 0;
   while (n--)
   {
@@ -223,7 +161,7 @@ void TFT_eSPI::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32_t 
 
     for(uint8_t j= 0; j<8; j++){
       // Use a lower detect threshold as corners tend to be less sensitive
-      while(!validTouch(&x_tmp, &y_tmp, Z_THRESHOLD/2));
+      while(!validTouch(&x_tmp, &y_tmp, 10));
       values[i*2  ] += x_tmp;
       values[i*2+1] += y_tmp;
       }
@@ -293,8 +231,8 @@ void TFT_eSPI::setTouch(uint16_t *parameters){
   touchCalibration_x1 = parameters[1];
   touchCalibration_y0 = parameters[2];
   touchCalibration_y1 = parameters[3];
-
-  if(touchCalibration_x0 == 0) touchCalibration_x0 = 1;
+  
+   if(touchCalibration_x0 == 0) touchCalibration_x0 = 1;
   if(touchCalibration_x1 == 0) touchCalibration_x1 = 1;
   if(touchCalibration_y0 == 0) touchCalibration_y0 = 1;
   if(touchCalibration_y1 == 0) touchCalibration_y1 = 1;

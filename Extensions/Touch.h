@@ -10,7 +10,7 @@
   void     convertRawXY(uint16_t *x, uint16_t *y);
            // Get the screen touch coordinates, returns true if screen has been touched
            // if the touch cordinates are off screen then x and y are not updated
-  uint8_t  getTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 600);
+  uint8_t  getTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 10);
 
            // Run screen calibration and test, report calibration values to the serial port
   void     calibrateTouch(uint16_t *data, uint32_t color_fg, uint32_t color_bg, uint8_t size);
@@ -23,7 +23,7 @@
   inline void spi_end_touch()   __attribute__((always_inline));
 
            // Private function to validate a touch, allow settle time and reduce spurious coordinates
-  uint8_t  validTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 600);
+  uint8_t  validTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 10);
 
            // Initialise with example calibration values so processor does not crash if setTouch() not called in setup()
   uint16_t touchCalibration_x0 = 300, touchCalibration_x1 = 3600, touchCalibration_y0 = 300, touchCalibration_y1 = 3600;

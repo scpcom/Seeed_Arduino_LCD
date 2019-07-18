@@ -676,7 +676,7 @@ class TFT_eSPI : public Print {
 #endif
 
 // Load the Touch extension
-#ifdef TOUCH_CS
+#ifdef TOUCH
   #include "Extensions/Touch.h"
 #endif
 
