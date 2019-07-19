@@ -17,7 +17,7 @@
 ***************************************************************************************/
 uint8_t TFT_eSPI::getTouchRaw(uint16_t *x, uint16_t *y){
   #ifdef FOURWIRETOUCH
-    #include "Extensions\Touch_Drivers\4WiresTouch\getRaw.h"
+    #include "Extensions/Touch_Drivers/4WiresTouch/getRaw.h"
     *x = temp_x; *y=temp_y;
   #else
     #error Didn't support this Touch yet.
@@ -31,7 +31,7 @@ uint8_t TFT_eSPI::getTouchRaw(uint16_t *x, uint16_t *y){
 ***************************************************************************************/
 uint16_t TFT_eSPI::getTouchRawZ(void){
   #ifdef FOURWIRETOUCH
-    #include "Extensions\Touch_Drivers\4WiresTouch\getRaw.h"
+    #include "Extensions/Touch_Drivers/4WiresTouch/getRaw.h"
     return (uint16_t)temp_z;
   #else
     #error Didn't support this Touch yet.

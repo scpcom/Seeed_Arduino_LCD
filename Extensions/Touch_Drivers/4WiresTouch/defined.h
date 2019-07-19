@@ -16,7 +16,7 @@
 #define XP A3   // can be a digital pin, this is A3 
 
 #define NUMSAMPLES 2		// sample number
-#define COMP       2
+#define COMP       5
 #define AVERAGE    1
 #define RXPLATE    300
 
@@ -25,6 +25,7 @@ unsigned char _xm = XM;
 unsigned char _ym = YM;
 unsigned char _xp = XP;
 
+#ifdef AVERAGE
 #define AVERAGETIME 3
 int avr_analog(int adpin)
 {
@@ -42,3 +43,5 @@ int avr_analog(int adpin)
     return (sum-min-max)/(AVERAGETIME-2);
 
 }
+
+#endif
