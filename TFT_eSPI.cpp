@@ -19,8 +19,6 @@
 #ifdef TOUCH
   #ifdef FOURWIRETOUCH
    #include "Extensions/Touch_Drivers/4WiresTouch/defined.h"
-  #elif
-    #error Didn't support this Touch yet.
   #else
     #error Didn't support this Touch yet.
   #endif
