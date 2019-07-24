@@ -1,4 +1,4 @@
-# Seeed-Arduino-FreeRTOS
+# Seeed-Arduino-LCD
 
 ### Introduction
 
