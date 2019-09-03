@@ -2734,7 +2734,11 @@ void TFT_eSPI::pushColors(uint8_t *data, uint32_t len)
       while ( len >=64 ) {_spi.transfer(data, 64); data += 64; len -= 64; }
       if (len) _spi.transfer(data, len);
     #else
+      #if defined (__SAMD51__)
+      _spi.transfer(data, NULL, len, true);
+      #else
       _spi.transfer(data, len);
+      #endif
     #endif
   #endif
 #endif
@@ -2755,10 +2759,17 @@ void TFT_eSPI::pushColors(uint16_t *data, uint32_t len, bool swap)
     if (swap) while ( len-- ) {tft_Write_16(*data); data++;}
     else while ( len-- ) {tft_Write_16S(*data); data++;}
   #else
-    if (swap) _spi.transfer((void *)data,len<<1);
-    else _spi.transfer((void *)data,len<<1);
+    #if defined (__SAMD51__)
+      if (swap) _spi.transfer((void *)data,NULL,len<<1, true);
+      else _spi.transfer((void *)data,NULL, len<<1, true);
+     #else
+      if (swap) _spi.transfer((void *)data,len<<1);
+      else _spi.transfer((void *)data,len<<1);
+    #endif
+    
   #endif
 
+   
   spi_end();
 }
 
