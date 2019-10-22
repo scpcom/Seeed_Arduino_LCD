@@ -15,7 +15,7 @@
 #ifndef _TFT_eSPIH_
 #define _TFT_eSPIH_
 
-#define TFT_ESPI_VERSION "1.4.5"
+#define TFT_ESPI_VERSION "1.4.18"
 
 // Include header file that defines the fonts loaded, the TFT drivers
 // available and the pins to be used
