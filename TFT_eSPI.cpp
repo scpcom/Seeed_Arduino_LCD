@@ -22,6 +22,14 @@
   #else
     #error Didn't support this Touch yet.
   #endif
+#if defined (ESP32)
+  #if !defined (ESP32_PARALLEL)
+    #ifdef USE_HSPI_PORT
+      SPIClass spi = SPIClass(HSPI);
+    #else // use default VSPI port
+      SPIClass& spi = SPI;
+    #endif
+  #endif
 #endif
 
 
@@ -29,9 +37,9 @@ SPIClass& _spi = SPI;
 
 // If it is a 16bit serial display we must transfer 16 bits every time
 #ifdef RPI_ILI9486_DRIVER
-  #define CMD_BITS 16-1
+  #define CMD_BITS (16-1)
 #else
-  #define CMD_BITS 8-1
+  #define CMD_BITS (8-1)
 #endif
 
 // Fast block write prototype
@@ -63,7 +71,7 @@ inline void TFT_eSPI::spi_end(void){
 #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
   if(!inTransaction) {if (!locked) {locked = true; CS_H; _spi.endTransaction();}}
 #else
-  if(!inTransaction) CS_H;
+  if(!inTransaction) {CS_H;}
 #endif
 }
 
@@ -329,6 +337,9 @@ void TFT_eSPI::init(uint8_t tc)
 #elif defined (R61581_DRIVER)
     #include "TFT_Drivers/R61581_Init.h"
 
+#elif defined (RM68140_DRIVER)
+	#include "TFT_Drivers/RM68140_Init.h"
+
 #elif defined (ST7789_2_DRIVER)
     #include "TFT_Drivers/ST7789_2_Init.h"
 
@@ -401,6 +412,9 @@ void TFT_eSPI::setRotation(uint8_t m)
 
 #elif defined (R61581_DRIVER)
     #include "TFT_Drivers/R61581_Rotation.h"
+
+#elif defined (RM68140_DRIVER)
+	#include "TFT_Drivers/RM68140_Rotation.h"
 
 #elif defined (ST7789_2_DRIVER)
     #include "TFT_Drivers/ST7789_2_Rotation.h"
@@ -724,8 +738,8 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, uint16_t *d
   if (x < 0) { dw += x; dx = -x; x = 0; }
   if (y < 0) { dh += y; dy = -y; y = 0; }
 
-  if ((x + w) > _width ) dw = _width  - x;
-  if ((y + h) > _height) dh = _height - y;
+  if ((x + dw) > _width ) dw = _width  - x;
+  if ((y + dh) > _height) dh = _height - y;
 
   if (dw < 1 || dh < 1) return;
 
@@ -763,8 +777,8 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, uint16_t *d
   if (x < 0) { dw += x; dx = -x; x = 0; }
   if (y < 0) { dh += y; dy = -y; y = 0; }
   
-  if ((x + w) > _width ) dw = _width  - x;
-  if ((y + h) > _height) dh = _height - y;
+  if ((x + dw) > _width ) dw = _width  - x;
+  if ((y + dh) > _height) dh = _height - y;
 
   if (dw < 1 || dh < 1) return;
 
@@ -838,8 +852,8 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, const uint1
   if (x < 0) { dw += x; dx = -x; x = 0; }
   if (y < 0) { dh += y; dy = -y; y = 0; }
   
-  if ((x + w) > _width ) dw = _width  - x;
-  if ((y + h) > _height) dh = _height - y;
+  if ((x + dw) > _width ) dw = _width  - x;
+  if ((y + dh) > _height) dh = _height - y;
 
   if (dw < 1 || dh < 1) return;
 
@@ -902,8 +916,8 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, const uint1
   if (x < 0) { dw += x; dx = -x; x = 0; }
   if (y < 0) { dh += y; dy = -y; y = 0; }
   
-  if ((x + w) > _width ) dw = _width  - x;
-  if ((y + h) > _height) dh = _height - y;
+  if ((x + dw) > _width ) dw = _width  - x;
+  if ((y + dh) > _height) dh = _height - y;
 
   if (dw < 1 || dh < 1) return;
 
@@ -976,8 +990,8 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t *da
   if (x < 0) { dw += x; dx = -x; x = 0; }
   if (y < 0) { dh += y; dy = -y; y = 0; }
   
-  if ((x + w) > _width ) dw = _width  - x;
-  if ((y + h) > _height) dh = _height - y;
+  if ((x + dw) > _width ) dw = _width  - x;
+  if ((y + dh) > _height) dh = _height - y;
 
   if (dw < 1 || dh < 1) return;
 
@@ -1082,8 +1096,8 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t *da
   if (x < 0) { dw += x; dx = -x; x = 0; }
   if (y < 0) { dh += y; dy = -y; y = 0; }
   
-  if ((x + w) > _width ) dw = _width  - x;
-  if ((y + h) > _height) dh = _height - y;
+  if ((x + dw) > _width ) dw = _width  - x;
+  if ((y + dh) > _height) dh = _height - y;
 
   if (dw < 1 || dh < 1) return;
 
@@ -2070,6 +2084,7 @@ int16_t TFT_eSPI::textWidth(const char *string, uint8_t font)
       str_width += pgm_read_byte( widthtable + uniCode); // Normally we need to subtract 32 from uniCode
       else str_width += pgm_read_byte( widthtable + 32); // Set illegal character = space width
     }
+
   }
   else
   {
@@ -2994,6 +3009,7 @@ void TFT_eSPI::setAttribute(uint8_t attr_id, uint8_t param) {
             break;
         case 2:
             _utf8  = param;
+            decoderState = 0;
             break;
         //case 3: // TBD future feature control
         //    _tbd = param;
@@ -3054,7 +3070,7 @@ uint16_t TFT_eSPI::decodeUTF8(uint8_t c)
       return 0;
     }
     // 21 bit Unicode  Code Point not supported so fall-back to extended ASCII
-    if ((c & 0xF8) == 0xF0) return (uint16_t)c;
+    // if ((c & 0xF8) == 0xF0) return (uint16_t)c;
   }
   else
   {
@@ -3333,7 +3349,7 @@ int16_t TFT_eSPI::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t font)
   {
     if ((font>2) && (font<9))
     {
-      flash_address = pgm_read_dword( (const void*)pgm_read_dword( &(fontdata[font].chartbl ) ) + uniCode*sizeof(void *) );
+      flash_address = pgm_read_dword( (const void*)(pgm_read_dword( &(fontdata[font].chartbl ) ) + uniCode*sizeof(void *)) );
       width = pgm_read_byte( (uint8_t *)pgm_read_dword( &(fontdata[font].widthtbl ) ) + uniCode );
       height= pgm_read_byte( &fontdata[font].height );
     }
@@ -3398,23 +3414,24 @@ int16_t TFT_eSPI::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t font)
     {
       spi_begin();
 
-      setWindow(x, y, (x + w * 8) - 1, y + height - 1);
+      setWindow(x, y, x + width - 1, y + height - 1);
 
       uint8_t mask;
       for (int32_t i = 0; i < height; i++)
       {
+        pX = width;
         for (int32_t k = 0; k < w; k++)
         {
-          line = pgm_read_byte((uint8_t *)flash_address + w * i + k);
-          pX = x + k * 8;
+          line = pgm_read_byte((uint8_t *) (flash_address + w * i + k) );
           mask = 0x80;
-          while (mask) {
+          while (mask && pX) {
             if (line & mask) {tft_Write_16(textcolor);}
             else {tft_Write_16(textbgcolor);}
+            pX--;
             mask = mask >> 1;
           }
         }
-        pY += textsize;
+        if (pX) {tft_Write_16(textbgcolor);}
       }
 
       spi_end();
@@ -3943,6 +3960,12 @@ int16_t TFT_eSPI::drawFloat(float floatNumber, uint8_t dp, int32_t poX, int32_t 
 
 void TFT_eSPI::setFreeFont(const GFXfont *f)
 {
+  if (f == nullptr) // Fix issue #400 (ESP32 crash)
+  {
+    setTextFont(1); // Use GLCD font
+    return;
+  }
+
   textfont = 1;
   gfxFont = (GFXfont *)f;
 
@@ -4027,6 +4050,18 @@ void writeBlock(uint16_t color, uint32_t repeat)
 void writeBlock(uint16_t color, uint32_t repeat)
 {
   while(repeat--) {tft_Write_16(color);}
+}
+#endif
+
+
+/***************************************************************************************
+** Function name:           getSPIinstance
+** Description:             Get the instance of the SPI class (for ESP32 only)
+***************************************************************************************/
+#ifndef ESP32_PARALLEL
+SPIClass& TFT_eSPI::getSPIinstance(void)
+{
+  return spi;
 }
 #endif
 
