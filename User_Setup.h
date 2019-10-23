@@ -28,7 +28,6 @@
 //#define ST7789_DRIVER      // Full configuration option, define additional parameters below for this display
 //#define ST7789_2_DRIVER    // Minimal configuration option, define additional parameters below for this display
 //#define R61581_DRIVER
-//#define RM68140_DRIVER
 
 // Some displays support SPI reads via the MISO pin, other displays have a single
 // bi-directional SDA pin and the library will try to read this via the MOSI line.
@@ -36,7 +35,7 @@
 
 // #define TFT_SDA_READ      // This option is for ESP32 ONLY, tested with ST7789 display only
 
-// For ST7789 and ILI9341 ONLY, define the colour order IF the blue and red are swapped on your display
+// For ST7789 ONLY, define the colour order IF the blue and red are swapped on your display
 // Try ONE option at a time to find the correct colour order for your display
 
 //  #define TFT_RGB_ORDER TFT_RGB  // Colour order Red-Green-Blue
@@ -125,16 +124,23 @@
 // ###### EDIT THE PIN NUMBERS IN THE LINES FOLLOWING TO SUIT YOUR BOARD SETUP ######
 
 // For seeed samd21 - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
-#define TFT_CS   5  // Chip select control pin D8
-#define TFT_DC   6  // Data Command control pin
+//#define TFT_CS   5  // Chip select control pin D8
+//#define TFT_DC   6  // Data Command control pin
 //#define TFT_RST  33  // Reset pin (could connect to NodeMCU RST, see next line)
-#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+//#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
 // For K210 - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
 //#define TFT_CS   29  // Chip select control pin D8
 //#define TFT_DC   25  // Data Command control pin
 //#define TFT_RST  33  // Reset pin (could connect to NodeMCU RST, see next line)
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+
+//For seeed GroveUI - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
+#define TFT_CS   LCD_SS_PIN  // Chip select control pin D8
+#define TFT_DC   LCD_DC  // Data Command control pin
+#define TFT_RST  LCD_RESET  // Reset pin (could connect to NodeMCU RST, see next line)
+//#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+
 
 
 

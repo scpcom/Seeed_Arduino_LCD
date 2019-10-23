@@ -115,9 +115,9 @@
 
   writecommand(ILI9341_SLPOUT);    //Exit Sleep
  
-  spi_end();
+  com_end();
   delay(120);
-  spi_begin();
+  com_begin();
   
   writecommand(ILI9341_DISPON);    //Display on
 

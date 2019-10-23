@@ -157,38 +157,38 @@
 #if  defined (ILI9488_DRIVER) // 16 bit colour converted to 3 bytes for 18 bit RGB
 
   // Write 8 bits to TFT
-  #define tft_Write_8(C)   _spi.transfer(C)
+  #define tft_Write_8(C)   _com.transfer(C)
 
   // Convert 16 bit colour to 18 bit and write in 3 bytes
-  #define tft_Write_16(C)  _spi.transfer((C & 0xF800)>>8); \
-                           _spi.transfer((C & 0x07E0)>>3); \
-                           _spi.transfer((C & 0x001F)<<3)
+  #define tft_Write_16(C)  _com.transfer((C & 0xF800)>>8); \
+                           _com.transfer((C & 0x07E0)>>3); \
+                           _com.transfer((C & 0x001F)<<3)
 
   // Convert swapped byte 16 bit colour to 18 bit and write in 3 bytes
-  #define tft_Write_16S(C) _spi.transfer(C & 0xF8); \
-                           _spi.transfer((C & 0xE000)>>11 | (C & 0x07)<<5); \
-                           _spi.transfer((C & 0x1F00)>>5)
+  #define tft_Write_16S(C) _com.transfer(C & 0xF8); \
+                           _com.transfer((C & 0xE000)>>11 | (C & 0x07)<<5); \
+                           _com.transfer((C & 0x1F00)>>5)
   // Write 32 bits to TFT
-  #define tft_Write_32(C)  _spi.transfer((void *)C, 4)
+  #define tft_Write_32(C)  _com.transfer((void *)C, 4)
 
 #elif  defined (RPI_ILI9486_DRIVER)
-  #define tft_Write_8(C)   _spi.transfer(0); _spi.transfer(C)
-  #define tft_Write_16(C)  _spi.transfer((void *)C, 2)
-  #define tft_Write_16S(C) _spi.transfer((void *)(C<<8 | C>>8), 2)
-  #define tft_Write_32(C)  _spi.transfer((void *)C, 4)
+  #define tft_Write_8(C)   _com.transfer(0); _com.transfer(C)
+  #define tft_Write_16(C)  _com.transfer((void *)C, 2)
+  #define tft_Write_16S(C) _com.transfer((void *)(C<<8 | C>>8), 2)
+  #define tft_Write_32(C)  _com.transfer((void *)C, 4)
 #else
-  #define tft_Write_8(C)   _spi.transfer(C)
-  #define tft_Write_16(C)  _spi.transfer(C >> 8); \
-                           _spi.transfer(C & 0xFF)
-  #define tft_Write_32(C)  _spi.transfer(C >> 24); \
-                           _spi.transfer((C & 0xFFFFFF) >> 16); \
-                           _spi.transfer((C & 0xFFFF)  >> 8); \
-                           _spi.transfer(C & 0xFF)
+  #define tft_Write_8(C)   _com.transfer(C)
+  #define tft_Write_16(C)  _com.transfer(C >> 8); \
+                           _com.transfer(C & 0xFF)
+  #define tft_Write_32(C)  _com.transfer(C >> 24); \
+                           _com.transfer((C & 0xFFFFFF) >> 16); \
+                           _com.transfer((C & 0xFFFF)  >> 8); \
+                           _com.transfer(C & 0xFF)
 #endif
 
 
 
-#define tft_Read_8() _spi.transfer(0)
+#define tft_Read_8() _com.transfer(0)
 
 #ifdef LOAD_GFXFF
   // We can include all the free fonts and they will only be built into
@@ -625,11 +625,11 @@ class TFT_eSPI : public Print {
 
  private:
 
-  inline void spi_begin() __attribute__((always_inline));
-  inline void spi_end()   __attribute__((always_inline));
+  inline void com_begin() __attribute__((always_inline));
+  inline void com_end()   __attribute__((always_inline));
 
-  inline void spi_begin_read() __attribute__((always_inline));
-  inline void spi_end_read()   __attribute__((always_inline));
+  inline void com_begin_read() __attribute__((always_inline));
+  inline void com_end_read()   __attribute__((always_inline));
 
   void     readAddrWindow(int32_t xs, int32_t ys, int32_t w, int32_t h);
 
