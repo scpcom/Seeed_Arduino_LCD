@@ -25,8 +25,9 @@
   #endif
 #endif
 
-
-TFT_Interface _com(&SPI3);
+#ifdef HASSPI
+TFT_Interface _com(&SPICOM);
+#endif
 
 // If it is a 16bit serial display we must transfer 16 bits every time
 #ifdef RPI_ILI9486_DRIVER

@@ -1,6 +1,5 @@
 #include <Arduino.h>
-
-#define HASSPI 1
+#include <User_Setup.h>
 
 #ifdef HASSPI
 #ifdef KENDRYTE_K210
