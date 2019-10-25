@@ -27,6 +27,43 @@
 #include <Arduino.h>
 #include <User_Setup.h>
 
+// interface if you want to use this library with you protocol, you neeed to realize them
+extern void interface_begin();
+extern uint8_t interface_transfer(uint8_t data);
+extern uint16_t interface_transfer16(uint16_t data);
+extern void interface_transfer(void *data, uint32_t count);
+extern void interface_end();
+extern void interface_writeCommand(uint8_t c);
+extern void interface_writeData(uint8_t d);
+
+
+#ifndef TFT_DC
+  #define DC_C // No macro allocated so it generates no code
+  #define DC_D // No macro allocated so it generates no code
+#else
+  #define DC_C digitalWrite(TFT_DC, LOW)
+  #define DC_D digitalWrite(TFT_DC, HIGH)
+#endif
+
+
+#ifndef TFT_CS
+  #define CS_L // No macro allocated so it generates no code
+  #define CS_H // No macro allocated so it generates no code
+#else
+  #define CS_L digitalWrite(TFT_CS, LOW)
+  #define CS_H digitalWrite(TFT_CS, HIGH)
+#endif
+
+// Use single register write for CS_L and DC_C if pins are both in range 0-31
+
+#define CS_L_DC_C CS_L; DC_C
+
+/*
+ * if you have Arduino SPI library, then you can use SPI library as interface.
+ * Otherwise, you can implement the following interface by yourself
+ * 
+ */
+
 #ifdef HASSPI
 #ifdef KENDRYTE_K210
   #include <SPIClass.h>
@@ -46,6 +83,8 @@ public:
     ~TFT_Interface();
     void begin();
     void end();
+    void writeCommand(uint8_t c);
+    void writeData(uint8_t d);
     #ifdef HASSPI
     void beginTransaction(SPISettings settings);
     void endTransaction();

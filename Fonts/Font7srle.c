@@ -6,12 +6,11 @@
 // This font only contains characters [space] 0 1 2 3 4 5 6 7 8 9 : . -
 // All other characters print as a space
 
-#if defined(KENDRYTE_K210) || defined(ARDUINO_ARCH_SAMD)
-  #include <avr/pgmspace.h>
-#else
+#if defined(ARDUINO_ARCH_AVR)
   #include <pgmspace.h>
+#else
+  #include <avr/pgmspace.h>
 #endif
-
 
 PROGMEM const unsigned char widtbl_f7s[96] =          // character width table
 {

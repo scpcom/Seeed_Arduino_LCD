@@ -25,6 +25,7 @@
  */
 #include <TFT_Interface.h>
 
+
 #ifdef HASSPI
 TFT_Interface::TFT_Interface(SPIClass* spi)
 {
@@ -45,8 +46,9 @@ TFT_Interface::~TFT_Interface()
 void TFT_Interface::begin()
 {
     #ifdef HASSPI
-      this->_SPI->begin();
+    this->_SPI->begin();
     #else
+    interface_begin();
     #endif
     return;
 }
@@ -54,8 +56,9 @@ void TFT_Interface::begin()
 void TFT_Interface::end()
 {
     #ifdef HASSPI
-        this->_SPI->end();
+    this->_SPI->end();
     #else
+    interface_end();
     #endif
     return;
 }
@@ -66,7 +69,7 @@ byte TFT_Interface::transfer(uint8_t data)
     #ifdef HASSPI
         return this->_SPI->transfer(data);
     #else
-        return 0;
+        return interface_transfer(data);
     #endif
 }
 
@@ -75,7 +78,7 @@ uint16_t TFT_Interface::transfer16(uint16_t data)
     #ifdef HASSPI
         return this->_SPI->transfer16(data);
     #else
-        return 0;
+        return interface_transfer16(data);
     #endif
 }
 void TFT_Interface::transfer(void *buf, size_t count)
@@ -83,13 +86,13 @@ void TFT_Interface::transfer(void *buf, size_t count)
     #ifdef HASSPI
         return this->_SPI->transfer(buf, count);
     #else
-        return;
+        return interface_transfer(buf, count);
     #endif
 }
 #if defined (__SAMD51__)
 void TFT_Interface::transfer(const void* txbuf, void* rxbuf, size_t count, bool block)
 {
-     #ifdef HASSPI
+    #ifdef HASSPI
         return this->_SPI->transfer(txbuf, rxbuf, count, block);
     #else
         return;
@@ -116,3 +119,23 @@ void TFT_Interface::endTransaction()
 
 }
 #endif
+
+void TFT_Interface::writeCommand(uint8_t c)
+{
+   #ifdef HASSPI
+    DC_C;
+    transfer(c);
+   #else
+       interface_writeCommand(c);
+   #endif
+
+}
+void TFT_Interface::writeData(uint8_t d)
+{
+    #ifdef HASSPI
+    DC_D;
+    transfer(d);
+    #else
+    interface_writeData(d);
+    #endif
+}

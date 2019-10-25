@@ -123,30 +123,35 @@
 
 // ###### EDIT THE PIN NUMBERS IN THE LINES FOLLOWING TO SUIT YOUR BOARD SETUP ######
 
-// For seeed samd21 - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
-#define HASSPI 1
-#define SPICOM SPI
+// For seeed samd21 
+//#define HASSPI 1
+//#define SPICOM SPI
 //#define TFT_CS   5  
 //#define TFT_DC   6  
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
-// For K210 - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
-#define HASSPI 1
-#define SPICOM SPI
+// For K210 -
+//#define HASSPI 1
+//#define SPICOM SPI
 //#define TFT_CS   29  
 //#define TFT_DC   25 
 //#define TFT_RST  33 
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
-//For seeed GroveUI - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
-#define HASSPI 1
-#define SPICOM   LCD_SPI
-#define TFT_CS   LCD_SS_PIN  
-#define TFT_DC   LCD_DC  
-#define TFT_RST  LCD_RESET  //Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+//For seeed GroveUI - u
+//#define HASSPI 1
+//#define SPICOM   LCD_SPI
+//#define TFT_CS   LCD_SS_PIN  
+//#define TFT_DC   LCD_DC  
+//#define TFT_RST  LCD_RESET  //Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+//#define TFT_BL   LCD_BACKLIGHT
+//#define TFT_BACKLIGHT_ON HIGH
 
 
-
+//For GD32
+#define TFT_RST PE1
+#define TFT_BL PD12
+#define TFT_BACKLIGHT_ON LOW
 
 
 
@@ -222,7 +227,7 @@
  #define SUPPORT_TRANSACTIONS
  #define SPI_HAS_TRANSACTION
 
- #define TOUCH
- #define FOURWIRETOUCH
+ //#define TOUCH
+ //#define FOURWIRETOUCH
 
 

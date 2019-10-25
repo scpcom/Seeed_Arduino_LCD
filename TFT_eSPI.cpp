@@ -1,6 +1,5 @@
 /***************************************************
-  Arduino TFT graphics library targeted at ESP8266
-  and ESP32 based boards.
+  Arduino TFT graphics library
 
   This is a standalone library that contains the
   hardware driver, the graphics functions and the
@@ -27,6 +26,8 @@
 
 #ifdef HASSPI
 TFT_Interface _com(&SPICOM);
+#else
+TFT_Interface _com = TFT_Interface();
 #endif
 
 // If it is a 16bit serial display we must transfer 16 bits every time
@@ -46,7 +47,7 @@ uint8_t readByte(void);
 void busDir(uint32_t mask, uint8_t mode);
 
 inline void TFT_eSPI::com_begin(void){
-#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) 
+#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) && (HASSPI)
   if (locked) {
     locked = false; 
     #ifdef KENDRYTE_K210
@@ -62,7 +63,7 @@ inline void TFT_eSPI::com_begin(void){
 }
 
 inline void TFT_eSPI::com_end(void){
-#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
+#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) && (HASSPI)
   if(!inTransaction) {if (!locked) {locked = true; CS_H; _com.endTransaction();}}
 #else
   if(!inTransaction) {CS_H;}
@@ -70,7 +71,7 @@ inline void TFT_eSPI::com_end(void){
 }
 
 inline void TFT_eSPI::com_begin_read(void){
-#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
+#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) && (HASSPI)
   if (locked) {
   locked = false; 
   #ifdef KENDRYTE_K210
@@ -86,7 +87,7 @@ inline void TFT_eSPI::com_begin_read(void){
 }
 
 inline void TFT_eSPI::com_end_read(void){
-#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
+#if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) && (HASSPI)
   if(!inTransaction) {if (!locked) {locked = true; CS_H; _com.endTransaction();}}
 #else
    if(!inTransaction) CS_H;
@@ -98,7 +99,7 @@ inline void TFT_eSPI::com_end_read(void){
   inline void TFT_eSPI::com_begin_touch(void){
    CS_H; // Just in case it has been left low
 
-  #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
+  #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) && (HASSPI)
     if (locked) {
       locked = false; 
       #ifdef KENDRYTE_K210
@@ -117,7 +118,7 @@ inline void TFT_eSPI::com_end_read(void){
   inline void TFT_eSPI::com_end_touch(void){
   T_CS_H;
 
-  #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS)
+  #if defined (SPI_HAS_TRANSACTION) && defined (SUPPORT_TRANSACTIONS) && (HASSPI)
     if(!inTransaction) {if (!locked) {locked = true; _com.endTransaction();}}
   #else
     //_com.setFrequency(SPI_FREQUENCY);
@@ -181,7 +182,7 @@ TFT_eSPI::TFT_eSPI(int16_t w, int16_t h)
 
   _swapBytes = false;   // Do not swap colour bytes by default
 
-  locked = true;        // ESP32 transaction mutex lock flags
+  locked = true;        // transaction mutex lock flags
   inTransaction = false;
 
   _booted   = true;
@@ -474,16 +475,7 @@ void TFT_eSPI::spiwrite(uint8_t c)
 ***************************************************************************************/
 void TFT_eSPI::writecommand(uint8_t c)
 {
-  com_begin(); // CS_L;
-
-  DC_C;
-
-  tft_Write_8(c);
-
-  DC_D;
-
-  com_end();  // CS_H;
-
+  _com.writeCommand(c);
 }
 
 
@@ -493,15 +485,7 @@ void TFT_eSPI::writecommand(uint8_t c)
 ***************************************************************************************/
 void TFT_eSPI::writedata(uint8_t d)
 {
-  com_begin(); // CS_L;
-
-  DC_D;        // Play safe, but should already be in data mode
-
-  tft_Write_8(d);
-
-  CS_L;        // Allow more hold time for low VDI rail
-
-  com_end();   // CS_H;
+  _com.writeData(d);
 }
 
 
@@ -518,7 +502,7 @@ uint8_t TFT_eSPI::readcommand8(uint8_t cmd_function, uint8_t index)
   index = 0x10 + (index & 0x0F);
 
   DC_C;
-  tft_Write_8(0xD9);
+  writecommand(0xD9);
   DC_D;
   tft_Write_8(index);
 
@@ -526,7 +510,7 @@ uint8_t TFT_eSPI::readcommand8(uint8_t cmd_function, uint8_t index)
   CS_L;
 
   DC_C;
-  tft_Write_8(cmd_function);
+  writecommand(cmd_function);
   DC_D;
   reg = tft_Read_8();
 
@@ -832,10 +816,7 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, uint16_t *d
 ***************************************************************************************/
 void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, const uint16_t *data)
 {
-#ifdef ESP32
-  pushImage(x, y, w, h, (uint16_t*)data);
-#else
-  // Partitioned memory FLASH processor
+
   if ((x >= _width) || (y >= _height)) return;
 
   int32_t dx = 0;
@@ -886,7 +867,6 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, const uint1
 
   inTransaction = false;
   com_end();
-#endif // if ESP32 else ESP8266 check
 }
 
 
@@ -896,9 +876,6 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, const uint1
 ***************************************************************************************/
 void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, const uint16_t *data, uint16_t transp)
 {
-#ifdef ESP32
-  pushImage(x, y, w, h, (uint16_t*) data, transp);
-#else
   // Partitioned memory FLASH processor
   if ((x >= _width) || (y >= (int32_t)_height)) return;
 
@@ -964,7 +941,6 @@ void TFT_eSPI::pushImage(int32_t x, int32_t y, int32_t w, int32_t h, const uint1
 
   inTransaction = false;
   com_end();
-#endif // if ESP32 else ESP8266 check
 }
 
 
@@ -2185,30 +2161,6 @@ void TFT_eSPI::drawChar(int32_t x, int32_t y, uint16_t c, uint32_t color, uint32
     for (int8_t i = 0; i < 5; i++ ) column[i] = pgm_read_byte(font + (c * 5) + i);
     column[5] = 0;
 
-#if defined (ESP8266) && !defined (ILI9488_DRIVER)
-    color = (color >> 8) | (color << 8);
-    bg = (bg >> 8) | (bg << 8);
-
-    for (int8_t j = 0; j < 8; j++) {
-      for (int8_t k = 0; k < 5; k++ ) {
-        if (column[k] & mask) {
-          SPI1W0 = color;
-        }
-        else {
-          SPI1W0 = bg;
-        }
-        SPI1CMD |= SPIBUSY;
-        while(SPI1CMD & SPIBUSY) {}
-      }
-
-      mask <<= 1;
-
-      SPI1W0 = bg;
-      SPI1CMD |= SPIBUSY;
-      while(SPI1CMD & SPIBUSY) {}
-    }
-#else // for ESP32 or ILI9488
-
     for (int8_t j = 0; j < 8; j++) {
       for (int8_t k = 0; k < 5; k++ ) {
         if (column[k] & mask) {tft_Write_16(color);}
@@ -2217,9 +2169,6 @@ void TFT_eSPI::drawChar(int32_t x, int32_t y, uint16_t c, uint32_t color, uint32
       mask <<= 1;
       tft_Write_16(bg);
     }
-
-#endif
-
     com_end();
   }
   else
@@ -2437,7 +2386,7 @@ void TFT_eSPI::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)
 
   DC_C;
 
-  tft_Write_8(TFT_CASET);
+  writecommand(TFT_CASET);
 
   DC_D;
 
@@ -2451,7 +2400,7 @@ void TFT_eSPI::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)
   DC_C;
 
   // Row addr set
-  tft_Write_8(TFT_PASET);
+  writecommand(TFT_PASET);
 
   DC_D;
 
@@ -2465,7 +2414,7 @@ void TFT_eSPI::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)
   DC_C;
 
   // write to RAM
-  tft_Write_8(TFT_RAMWR);
+  writecommand(TFT_RAMWR);
 
   DC_D;
 
@@ -2477,71 +2426,6 @@ void TFT_eSPI::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)
 ** Function name:           readAddrWindow
 ** Description:             define an area to read a stream of pixels
 ***************************************************************************************/
-// Chip select stays low
-#if defined (ESP8266) && !defined (RPI_WRITE_STROBE)
-void TFT_eSPI::readAddrWindow(int32_t xs, int32_t ys, int32_t w, int32_t h)
-{
-
-  int32_t xe = xs + w - 1;
-  int32_t ye = ys + h - 1;
-
-  addr_col = 0xFFFF;
-  addr_row = 0xFFFF;
-  
-#ifdef CGRAM_OFFSET
-  xs += colstart;
-  xe += colstart;
-  ys += rowstart;
-  ye += rowstart;
-#endif
-
-  // Column addr set
-  DC_C;
-
-  SPI1U1 = (CMD_BITS << SPILMOSI) | (CMD_BITS << SPILMISO);
-
-  SPI1W0 = TFT_CASET;
-  SPI1CMD |= SPIBUSY;
-  while(SPI1CMD & SPIBUSY) {}
-
-  DC_D;
-
-  SPI1U1 = (31 << SPILMOSI) | (31 << SPILMISO);
-  // Load the two coords as a 32 bit value and shift in one go
-  SPI1W0 = (xs >> 8) | (uint16_t)(xs << 8) | ((uint8_t)(xe >> 8)<<16 | (xe << 24));
-  SPI1CMD |= SPIBUSY;
-  while(SPI1CMD & SPIBUSY) {}
-
-  // Row addr set
-  DC_C;
-
-  SPI1U1 = (CMD_BITS << SPILMOSI) | (CMD_BITS << SPILMISO);
-
-  SPI1W0 = TFT_PASET;
-  SPI1CMD |= SPIBUSY;
-  while(SPI1CMD & SPIBUSY) {}
-
-  DC_D;
-
-  SPI1U1 = (31 << SPILMOSI) | (31 << SPILMISO);
-  // Load the two coords as a 32 bit value and shift in one go
-  SPI1W0 = (ys >> 8) | (uint16_t)(ys << 8) | ((uint8_t)(ye >> 8)<<16 | (ye << 24));
-  SPI1CMD |= SPIBUSY;
-  while(SPI1CMD & SPIBUSY) {}
-
-  // read from RAM
-  DC_C;
-
-  SPI1U1 = (CMD_BITS << SPILMOSI) | (CMD_BITS << SPILMISO);
-  SPI1W0 = TFT_RAMRD;
-  SPI1CMD |= SPIBUSY;
-  while(SPI1CMD & SPIBUSY) {}
-
-  DC_D;
-
-}
-
-#else //ESP32
 
 void TFT_eSPI::readAddrWindow(int32_t xs, int32_t ys, int32_t w, int32_t h)
 {
@@ -2562,7 +2446,7 @@ ye += rowstart;
   // Column addr set
   DC_C;
 
-  tft_Write_8(TFT_CASET);
+  writecommand(TFT_CASET);
 
   DC_D;
 
@@ -2571,7 +2455,7 @@ ye += rowstart;
   // Row addr set
   DC_C;
 
-  tft_Write_8(TFT_PASET);
+  writecommand(TFT_PASET);
 
   DC_D;
 
@@ -2579,14 +2463,11 @@ ye += rowstart;
   
   DC_C;
 
-  tft_Write_8(TFT_RAMRD); // Read CGRAM command
+  writecommand(TFT_RAMRD); // Read CGRAM command
 
   DC_D;
 
 }
-
-#endif
-
 /***************************************************************************************
 ** Function name:           drawPixel
 ** Description:             push a single pixel at an arbitrary position
@@ -2608,7 +2489,7 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color)
   // No need to send x if it has not changed (speeds things up)
   if (addr_col != x) {
 
-    tft_Write_8(TFT_CASET);
+    writecommand(TFT_CASET);
 
     DC_D;
 
@@ -2627,7 +2508,7 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color)
   // No need to send y if it has not changed (speeds things up)
   if (addr_row != y) {
 
-    tft_Write_8(TFT_PASET);
+    writecommand(TFT_PASET);
 
     DC_D;
 
@@ -2644,7 +2525,7 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color)
   }
 
 
-  tft_Write_8(TFT_RAMWR);
+  writecommand(TFT_RAMWR);
 
   DC_D;
 
@@ -3954,7 +3835,7 @@ int16_t TFT_eSPI::drawFloat(float floatNumber, uint8_t dp, int32_t poX, int32_t 
 
 void TFT_eSPI::setFreeFont(const GFXfont *f)
 {
-  if (f == nullptr) // Fix issue #400 (ESP32 crash)
+  if (f == nullptr) 
   {
     setTextFont(1); // Use GLCD font
     return;
@@ -4043,22 +3924,34 @@ void writeBlock(uint16_t color, uint32_t repeat)
 
 void writeBlock(uint16_t color, uint32_t repeat)
 {
-  while(repeat--) {tft_Write_16(color);}
+  switch(repeat & 0x7)
+	{
+		case 1: repeat &= ~0x07; goto out1;
+		case 2: repeat &= ~0x07; goto out2;
+		case 3: repeat &= ~0x07; goto out3;
+		case 4: repeat &= ~0x07; goto out4;
+		case 5: repeat &= ~0x07; goto out5;
+		case 6: repeat &= ~0x07; goto out6;
+		case 7: repeat &= ~0x07; goto out7;
+
+		default: break;
+	}
+  
+	while(repeat > 0)
+	{
+		repeat -= 8;
+
+		out8: _com.transfer16(color);
+		out7: _com.transfer16(color);
+		out6: _com.transfer16(color);
+		out5: _com.transfer16(color);
+		out4: _com.transfer16(color);
+		out3: _com.transfer16(color);
+		out2: _com.transfer16(color);
+		out1: _com.transfer16(color);
+	}
 }
 #endif
-
-
-/***************************************************************************************
-** Function name:           getSPIinstance
-** Description:             Get the instance of the SPI class (for ESP32 only)
-***************************************************************************************/
-#ifndef ESP32_PARALLEL
-SPIClass& TFT_eSPI::getSPIinstance(void)
-{
-  //return _com;
-}
-#endif
-
 
 /***************************************************************************************
 ** Function name:           getSetup
@@ -4067,30 +3960,12 @@ SPIClass& TFT_eSPI::getSPIinstance(void)
 void TFT_eSPI::getSetup(setup_t &tft_settings)
 {
 // tft_settings.version is set in header file
-
-#if defined (ESP8266)
-  tft_settings.esp = 8266;
-#elif defined (ESP32)
-  tft_settings.esp = 32;
-#else
   tft_settings.esp = -1;
-#endif
 
 #if defined (SUPPORT_TRANSACTIONS)
   tft_settings.trans = true;
 #else
   tft_settings.trans = false;
-#endif
-
-#if defined (ESP32_PARALLEL)
-  tft_settings.serial = false;
-  tft_settings.tft_spi_freq = 0;
-#else
-  tft_settings.serial = true;
-  tft_settings.tft_spi_freq = SPI_FREQUENCY/100000;
-  #ifdef SPI_READ_FREQUENCY
-    tft_settings.tft_rd_freq = SPI_READ_FREQUENCY/100000;
-  #endif
 #endif
 
 #if defined(TFT_SPI_OVERLAP)
@@ -4169,26 +4044,6 @@ void TFT_eSPI::getSetup(setup_t &tft_settings)
   tft_settings.pin_tft_rst = TFT_RST;
 #else
   tft_settings.pin_tft_rst = -1;
-#endif
-
-#if defined (ESP32_PARALLEL)
-  tft_settings.pin_tft_d0 = TFT_D0;
-  tft_settings.pin_tft_d1 = TFT_D1;
-  tft_settings.pin_tft_d2 = TFT_D2;
-  tft_settings.pin_tft_d3 = TFT_D3;
-  tft_settings.pin_tft_d4 = TFT_D4;
-  tft_settings.pin_tft_d5 = TFT_D5;
-  tft_settings.pin_tft_d6 = TFT_D6;
-  tft_settings.pin_tft_d7 = TFT_D7;
-#else
-  tft_settings.pin_tft_d0 = -1;
-  tft_settings.pin_tft_d1 = -1;
-  tft_settings.pin_tft_d2 = -1;
-  tft_settings.pin_tft_d3 = -1;
-  tft_settings.pin_tft_d4 = -1;
-  tft_settings.pin_tft_d5 = -1;
-  tft_settings.pin_tft_d6 = -1;
-  tft_settings.pin_tft_d7 = -1;
 #endif
 
 #if defined (TOUCH_CS)

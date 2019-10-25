@@ -108,27 +108,6 @@
 #endif
 
 
-#ifndef TFT_DC
-  #define DC_C // No macro allocated so it generates no code
-  #define DC_D // No macro allocated so it generates no code
-#else
-  #define DC_C digitalWrite(TFT_DC, LOW)
-  #define DC_D digitalWrite(TFT_DC, HIGH)
-#endif
-
-
-#ifndef TFT_CS
-  #define CS_L // No macro allocated so it generates no code
-  #define CS_H // No macro allocated so it generates no code
-#else
-  #define CS_L digitalWrite(TFT_CS, LOW)
-  #define CS_H digitalWrite(TFT_CS, HIGH)
-#endif
-
-// Use single register write for CS_L and DC_C if pins are both in range 0-31
-
-#define CS_L_DC_C CS_L; DC_C
-
 
 // chip select signal for touchscreen
 #ifndef TOUCH_CS
@@ -178,8 +157,7 @@
   #define tft_Write_32(C)  _com.transfer((void *)C, 4)
 #else
   #define tft_Write_8(C)   _com.transfer(C)
-  #define tft_Write_16(C)  _com.transfer(C >> 8); \
-                           _com.transfer(C & 0xFF)
+  #define tft_Write_16(C)  _com.transfer16(C); 
   #define tft_Write_32(C)  _com.transfer(C >> 24); \
                            _com.transfer((C & 0xFFFFFF) >> 16); \
                            _com.transfer((C & 0xFFFF)  >> 8); \

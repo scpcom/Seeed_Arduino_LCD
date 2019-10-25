@@ -4,10 +4,10 @@
 #define FONT5X7_H
 
 
-#if defined(KENDRYTE_K210) || defined(ARDUINO_ARCH_SAMD)
-  #include <avr/pgmspace.h>
-#else
+#if defined(ARDUINO_ARCH_AVR)
   #include <pgmspace.h>
+#else
+  #include <avr/pgmspace.h>
 #endif
 
 
