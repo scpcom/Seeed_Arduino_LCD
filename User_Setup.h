@@ -153,13 +153,34 @@
 #define TFT_BL PD12
 #define TFT_BACKLIGHT_ON LOW
 
+// ##################################################################################
+//
+// Section 3. Define the touch function
+//
+// ##################################################################################
 
+#define TOUCH
+
+//for four wire touch 
+//#define FOURWIRETOUCH
+//#define YP A2   // must be an analog pin, use "An" notation!
+//#define XM A1   // must be an analog pin, use "An" notation!
+//#define XP A3   // can be a digital pin, 
+
+//for adx
+
+#define XPT2046TOUCH
+#define XPT_CS  PD13
+#define XPT_MOSI PE2
+#define XPT_MISO PE3
+#define XPT_CLK PE0
+#define XPT_PENIRQ PE4 
 
 
 
 // ##################################################################################
 //
-// Section 3. Define the fonts that are to be used here
+// Section 4. Define the fonts that are to be used here
 //
 // ##################################################################################
 
@@ -184,7 +205,7 @@
 
 // ##################################################################################
 //
-// Section 4. Other options
+// Section 5. Other options
 //
 // ##################################################################################
 
@@ -227,7 +248,5 @@
  #define SUPPORT_TRANSACTIONS
  #define SPI_HAS_TRANSACTION
 
- //#define TOUCH
- //#define FOURWIRETOUCH
 
 

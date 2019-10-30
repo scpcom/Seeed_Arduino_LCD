@@ -4,17 +4,14 @@
 #define USE_FAST_PINIO
 #endif
 
+#include "User_Setup.h"
+
 #if defined(ARDUINO_ARCH_AVR)
   #include <pgmspace.h>
 #else
   #include <avr/pgmspace.h>
 #endif
 
-
-#define YP A2   // must be an analog pin, use "An" notation!
-#define XM A1   // must be an analog pin, use "An" notation!
-#define YM A0   // can be a digital pin, this is A0 
-#define XP A3   // can be a digital pin, this is A3 
 
 #define NUMSAMPLES 2		// sample number
 #define COMP       5
@@ -28,7 +25,7 @@ unsigned char _xp = XP;
 
 #ifdef AVERAGE
 #define AVERAGETIME 3
-int avr_analog(int adpin)
+static int avr_analog(int adpin)
 {
     int sum = 0;
     int max = 0;

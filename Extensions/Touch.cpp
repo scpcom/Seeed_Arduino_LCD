@@ -19,10 +19,12 @@ uint8_t TFT_eSPI::getTouchRaw(uint16_t *x, uint16_t *y){
   #ifdef FOURWIRETOUCH
     #include "Extensions/Touch_Drivers/4WiresTouch/getRaw.h"
     *x = temp_x; *y=temp_y;
+  #elif defined XPT2046TOUCH
+    xpt.getXY(x, y);
   #else
     #error Didn't support this Touch yet.
   #endif
-  
+  return 1;
 }
 
 /***************************************************************************************
@@ -33,6 +35,13 @@ uint16_t TFT_eSPI::getTouchRawZ(void){
   #ifdef FOURWIRETOUCH
     #include "Extensions/Touch_Drivers/4WiresTouch/getRaw.h"
     return (uint16_t)temp_z;
+  #elif defined XPT2046TOUCH
+    if(xpt.touchDown())
+    {
+      return 9999;
+    }else{
+      return 0;
+    }
   #else
     #error Didn't support this Touch yet.
   #endif
@@ -48,8 +57,9 @@ uint8_t TFT_eSPI::validTouch(uint16_t *x, uint16_t *y, uint16_t threshold){
   if (getTouchRawZ() <= threshold) return false;
 
   delay(2); // Small delay to the next sample
+
   getTouchRaw(&x_tmp,&y_tmp);
-  
+
   *x = x_tmp;
   *y = y_tmp;
   

@@ -19,6 +19,8 @@
 #ifdef TOUCH
   #ifdef FOURWIRETOUCH
    #include "Extensions/Touch_Drivers/4WiresTouch/defined.h"
+  #elif defined XPT2046TOUCH
+   #include "Extensions/Touch_Drivers/XPT2046/XPT2046.h"
   #else
     #error Didn't support this Touch yet.
   #endif
@@ -361,6 +363,11 @@ void TFT_eSPI::init(uint8_t tc)
     digitalWrite(TFT_BL, HIGH);
     pinMode(TFT_BL, OUTPUT);
   #endif
+#endif
+#ifdef TOUCH
+#if defined XPT2046TOUCH
+  xpt.begin();
+#endif
 #endif
 }
 

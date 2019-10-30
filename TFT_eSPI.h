@@ -408,7 +408,6 @@ const PROGMEM fontinfo fontdata [] = {
   #endif
 };
 
-
 // Class functions and variables
 class TFT_eSPI : public Print {
 
