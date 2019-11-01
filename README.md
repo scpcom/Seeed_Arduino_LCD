@@ -1,33 +1,21 @@
-# Seeed-Arduino-LCD
 
-### Introduction
 
-This library fork form [TFT_eSPI](https://github.com/Bodmer/TFT_eSPI). It is used to drive LCD screen.
+# TFT_GD32 
 
-### Start
-You need to configure User_Setup.h to make your board work with LCD.
-For example, if you use the LCD screen of ILI9341, then you uncomment #define ILI9341_DRIVER to make it support.
-And you need to specify the pins of the connection. Here is the default configuration。
-##### SAMD21
- TFT   | PIN
- :-:   | :-:
- TFT_CS |  5 
- TFT_DC |  6  
- TFT_RST | -1  
-##### K210 PI
-  TFT   | PIN
- :-:   | :-:
- TFT_CS |  29 
- TFT_DC |  25 
- TFT_RST | 33
- 
- You can change pin definitions according to your needs.
- 
+This is platfromIO project of using the [Seeed Arduino LCD](https://github.com/Seeed-Studio/Seeed_Arduino_LCD) on GD32.
 
-### Boards
-  - kendryte k210
-  - SAMD21
+## Precondition
 
-### Note
-  You can get more information [here](https://github.com/Bodmer/TFT_eSPI). 
+- You neeed to install [platformIO](https://platformio.org/) on your computer. 
+- You neeed to install [Seeed Arduino LCD](https://github.com/Seeed-Studio/Seeed_Arduino_LCD) on you platformIO libraries.
+
+## Usage
+- open this project and complier.
+- Connect GD32 to JLINK, or use [DFU](http://gd32mcu.21ic.com/documents) to download the program.
+
+## Note
+
+- In order to get you up and running quickly, we have a beta version of the Arduino Core with serial port and spil ibrary. You can temporarily use this test version, and the official version will be continuously optimized.click [here](https://github.com/LynnL4/framework-arduino-gd32v).
+
+
 
