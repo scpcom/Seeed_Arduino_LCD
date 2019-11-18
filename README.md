@@ -14,19 +14,12 @@ And you need to specify the pins of the connection. Here is the default configur
  TFT_CS |  5 
  TFT_DC |  6  
  TFT_RST | -1  
-##### K210 PI
-  TFT   | PIN
- :-:   | :-:
- TFT_CS |  29 
- TFT_DC |  25 
- TFT_RST | 33
  
  You can change pin definitions according to your needs.
  
 
 ### Boards
-  - kendryte k210
-  - SAMD21
+ We recommend using it on internal flash chips larger than 128k. If you have a smaller flash device, I recommend using the [TFT_Touch_Shield_V2](https://github.com/Seeed-Studio/TFT_Touch_Shield_V2).
 
 ### Note
   You can get more information [here](https://github.com/Bodmer/TFT_eSPI). 
