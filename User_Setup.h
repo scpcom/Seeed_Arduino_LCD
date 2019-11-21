@@ -139,19 +139,19 @@
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
 //For seeed GroveUI - u
-//#define HASSPI 1
-//#define SPICOM   LCD_SPI
-//#define TFT_CS   LCD_SS_PIN  
-//#define TFT_DC   LCD_DC  
-//#define TFT_RST  LCD_RESET  //Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
-//#define TFT_BL   LCD_BACKLIGHT
-//#define TFT_BACKLIGHT_ON HIGH
+#define HASSPI 1
+#define SPICOM   LCD_SPI
+#define TFT_CS   LCD_SS_PIN  
+#define TFT_DC   LCD_DC  
+#define TFT_RST  LCD_RESET  //Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+#define TFT_BL   LCD_BACKLIGHT
+#define TFT_BACKLIGHT_ON HIGH
 
 
 //For GD32
-#define TFT_RST PE1
-#define TFT_BL PD12
-#define TFT_BACKLIGHT_ON LOW
+// #define TFT_RST PE1
+// #define TFT_BL PD12
+// #define TFT_BACKLIGHT_ON LOW
 
 // ##################################################################################
 //
@@ -159,7 +159,7 @@
 //
 // ##################################################################################
 
-#define TOUCH
+// #define TOUCH
 
 //for four wire touch 
 //#define FOURWIRETOUCH
@@ -169,12 +169,12 @@
 
 //for adx
 
-#define XPT2046TOUCH
-#define XPT_CS  PD13
-#define XPT_MOSI PE2
-#define XPT_MISO PE3
-#define XPT_CLK PE0
-#define XPT_PENIRQ PE4 
+// #define XPT2046TOUCH
+// #define XPT_CS  PD13
+// #define XPT_MOSI PE2
+// #define XPT_MISO PE3
+// #define XPT_CLK PE0
+// #define XPT_PENIRQ PE4 
 
 
 
