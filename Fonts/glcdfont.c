@@ -5,6 +5,7 @@
 
 
 #if defined(ARDUINO_ARCH_AVR)
+  #error If using AVR-Board, please use this library instead: https: github.com/Seeed-Studio/TFT_Touch_Shield_V2
   #include <pgmspace.h>
 #else
   #include <avr/pgmspace.h>
