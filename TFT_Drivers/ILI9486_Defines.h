@@ -5,7 +5,7 @@
 
 // For Raspberry Pi ILI9486 only with a modified board to add a write strobe:
 #if defined (TFT_WR) && defined (RPI_ILI9486_DRIVER)
-  #define RPI_WRITE_STROBE
+    #define RPI_WRITE_STROBE
 #endif
 
 // Color definitions for backwards compatibility with old sketches

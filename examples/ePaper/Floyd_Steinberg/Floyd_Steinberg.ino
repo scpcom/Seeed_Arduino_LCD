@@ -51,7 +51,7 @@ TFT_eSprite frame = TFT_eSprite(&glc);  // Invoke the Sprite class for the image
 
 uint16_t epd_width  = EPD_WIDTH;        // Set the initial values, these are swapped
 uint16_t epd_height = EPD_HEIGHT;       // in different landscape/portrait rotations
-                                        // so call frame.width() or frame.height() to get new values
+// so call frame.width() or frame.height() to get new values
 
 #define EPD_BUFFER 1                    // Label for the black frame buffer 1
 
@@ -65,35 +65,39 @@ int8_t limit = 5;                      // Limit the number of loops before halti
 //------------------------------------------------------------------------------------
 void setup() {
 
-  Serial.begin(250000); // Used for messages
+    Serial.begin(250000); // Used for messages
 
-  // Initialise the ePaper library
-  if (ePaper.Init() != 0) {
-    Serial.print("ePaper init failed");
-    while (1) yield(); // Wait here until re-boot
-  }
-  
-  Serial.println("\r\n ePaper initialisation OK");
+    // Initialise the ePaper library
+    if (ePaper.Init() != 0) {
+        Serial.print("ePaper init failed");
+        while (1) {
+            yield();    // Wait here until re-boot
+        }
+    }
 
-  // Initialise the SPIFFS filing system
-  if (!SPIFFS.begin()) {
-    Serial.println("SPIFFS initialisation failed!");
-    while (1) yield(); // Stay here twiddling thumbs
-  }
+    Serial.println("\r\n ePaper initialisation OK");
 
-  Serial.println(" SPIFFS initialisation OK");
+    // Initialise the SPIFFS filing system
+    if (!SPIFFS.begin()) {
+        Serial.println("SPIFFS initialisation failed!");
+        while (1) {
+            yield();    // Stay here twiddling thumbs
+        }
+    }
 
-  frame.setColorDepth(1); // Must set the bits per pixel to 1 for ePaper displays
-                          // Set bit depth BEFORE creating Sprite, default is 16!
+    Serial.println(" SPIFFS initialisation OK");
 
-  // Create a frame buffer in RAM of defined size and save the pointer to it
-  // RAM needed is about (EPD_WIDTH * EPD_HEIGHT)/8 , ~5000 bytes for 200 x 200 pixels
-  // Note: always create the Sprite before setting the Sprite rotation
-  framePtr = (uint8_t*) frame.createSprite(EPD_WIDTH, EPD_HEIGHT);
+    frame.setColorDepth(1); // Must set the bits per pixel to 1 for ePaper displays
+    // Set bit depth BEFORE creating Sprite, default is 16!
 
-  Serial.println("\r\nInitialisation done.");
+    // Create a frame buffer in RAM of defined size and save the pointer to it
+    // RAM needed is about (EPD_WIDTH * EPD_HEIGHT)/8 , ~5000 bytes for 200 x 200 pixels
+    // Note: always create the Sprite before setting the Sprite rotation
+    framePtr = (uint8_t*) frame.createSprite(EPD_WIDTH, EPD_HEIGHT);
 
-  listFiles();  // List all the files in the SPIFFS
+    Serial.println("\r\nInitialisation done.");
+
+    listFiles();  // List all the files in the SPIFFS
 }
 
 //------------------------------------------------------------------------------------
@@ -101,46 +105,48 @@ void setup() {
 //------------------------------------------------------------------------------------
 void loop() {
 
-  frame.setRotation(random(4)); // Set the rotation to 0, 1, 2 or 3 ( 1 & 3 = landscape)
+    frame.setRotation(random(4)); // Set the rotation to 0, 1, 2 or 3 ( 1 & 3 = landscape)
 
-  frame.fillSprite(PAPER);
+    frame.fillSprite(PAPER);
 
-  // Draw 8 bit grey-scale bitmap using Floyd-Steinberg dithering at x,y
-  //           /File name      x  y
-  //drawFSBmp("/TestCard.bmp", 0, 0); // 176 x 264 pixels
+    // Draw 8 bit grey-scale bitmap using Floyd-Steinberg dithering at x,y
+    //           /File name      x  y
+    //drawFSBmp("/TestCard.bmp", 0, 0); // 176 x 264 pixels
 
-  drawFSBmp("/Tiger.bmp", (frame.width()-176)/2, (frame.height()-234)/2); // 176 x 234 pixels
+    drawFSBmp("/Tiger.bmp", (frame.width() - 176) / 2, (frame.height() - 234) / 2); // 176 x 234 pixels
 
-  updateDisplay();  // Send image to display and refresh
+    updateDisplay();  // Send image to display and refresh
 
-  delay(5000);
+    delay(5000);
 
-  frame.fillSprite(PAPER);  // Fill frame with white
+    frame.fillSprite(PAPER);  // Fill frame with white
 
-  // Draw circle in frame buffer (x, y, r, color) in center of screen
-  frame.drawCircle(frame.width()/2, frame.height()/2, frame.width()/6, INK);
+    // Draw circle in frame buffer (x, y, r, color) in center of screen
+    frame.drawCircle(frame.width() / 2, frame.height() / 2, frame.width() / 6, INK);
 
-  // Draw diagonal lines
-  frame.drawLine(0 ,                0, frame.width()-1, frame.height()-1, INK);
-  frame.drawLine(0 , frame.height()-1, frame.width()-1,                0, INK);
+    // Draw diagonal lines
+    frame.drawLine(0,                0, frame.width() - 1, frame.height() - 1, INK);
+    frame.drawLine(0, frame.height() - 1, frame.width() - 1,                0, INK);
 
-  updateDisplay();  // Send image to display and refresh
+    updateDisplay();  // Send image to display and refresh
 
-  delay(3000);
+    delay(3000);
 
-  // Run a rotation test
-  rotateTest();
+    // Run a rotation test
+    rotateTest();
 
-  // Put screen to sleep to save power (if wanted)
-  ePaper.Sleep();
+    // Put screen to sleep to save power (if wanted)
+    ePaper.Sleep();
 
-  if (--limit <= 0) while(1) yield(); // Wait here
+    if (--limit <= 0) while (1) {
+            yield();    // Wait here
+        }
 
-  delay(20000); // Wait here for 20s
+    delay(20000); // Wait here for 20s
 
-  // Wake up ePaper display so we can talk to it
-  Serial.println("Waking up!");
-  ePaper.Init();
+    // Wake up ePaper display so we can talk to it
+    Serial.println("Waking up!");
+    ePaper.Init();
 
 } // end of loop()
 
@@ -149,39 +155,38 @@ void loop() {
 // setRotation() actually rotates the drawing coordinates, not the whole display frame
 // buffer so we can use this to draw text at right angles or upside down
 //------------------------------------------------------------------------------------
-void rotateTest(void)
-{
-  //frame.fillSprite(PAPER);             // Fill buffer with white to clear old graphics
+void rotateTest(void) {
+    //frame.fillSprite(PAPER);             // Fill buffer with white to clear old graphics
 
-  // Draw some text in frame buffer
-  frame.setTextFont(4);                  // Select font 4
-  frame.setTextColor(INK);               // Set colour to ink
-  frame.setTextDatum(TC_DATUM);          // Middle centre text datum
+    // Draw some text in frame buffer
+    frame.setTextFont(4);                  // Select font 4
+    frame.setTextColor(INK);               // Set colour to ink
+    frame.setTextDatum(TC_DATUM);          // Middle centre text datum
 
-  frame.setRotation(0);                  // Set the display rotation to 0, 1, 2 or 3 ( 1 & 3 = landscape)
-  epd_width  = frame.width();            // Get the values for the current rotation
-  epd_height = frame.height();           // epd_height is not used in this sketch
+    frame.setRotation(0);                  // Set the display rotation to 0, 1, 2 or 3 ( 1 & 3 = landscape)
+    epd_width  = frame.width();            // Get the values for the current rotation
+    epd_height = frame.height();           // epd_height is not used in this sketch
 
-  frame.drawString("Rotation 0",   epd_width / 2, 10);
+    frame.drawString("Rotation 0",   epd_width / 2, 10);
 
-  frame.setRotation(1);                  // Set the display rotation to 1
-  epd_width  = frame.width();            // Get the values for the current rotation
-  epd_height = frame.height();           // epd_height is not used in this sketch
+    frame.setRotation(1);                  // Set the display rotation to 1
+    epd_width  = frame.width();            // Get the values for the current rotation
+    epd_height = frame.height();           // epd_height is not used in this sketch
 
-  frame.drawString("Rotation 1",   epd_width / 2, 10);
+    frame.drawString("Rotation 1",   epd_width / 2, 10);
 
-  frame.setRotation(2);                  // Set the display rotation to 2
-  epd_width  = frame.width();            // Get the values for the current rotation
-  epd_height = frame.height();           // epd_height is not used in this sketch
+    frame.setRotation(2);                  // Set the display rotation to 2
+    epd_width  = frame.width();            // Get the values for the current rotation
+    epd_height = frame.height();           // epd_height is not used in this sketch
 
-  frame.drawString("Rotation 2",   epd_width / 2, 10);
+    frame.drawString("Rotation 2",   epd_width / 2, 10);
 
-  frame.setRotation(3);                  // Set the display rotation to 3
-  epd_width  = frame.width();            // Get the values for the current rotation
-  epd_height = frame.height();           // epd_height is not used in this sketch
+    frame.setRotation(3);                  // Set the display rotation to 3
+    epd_width  = frame.width();            // Get the values for the current rotation
+    epd_height = frame.height();           // epd_height is not used in this sketch
 
-  frame.drawString("Rotation 3",   epd_width / 2, 10);
+    frame.drawString("Rotation 3",   epd_width / 2, 10);
 
-  Serial.println("Updating display");
-  updateDisplay();  // Update display
+    Serial.println("Updating display");
+    updateDisplay();  // Update display
 }

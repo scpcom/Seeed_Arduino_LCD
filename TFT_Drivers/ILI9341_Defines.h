@@ -52,13 +52,13 @@
 #define TFT_MAD_RGB 0x00
 
 #ifdef TFT_RGB_ORDER
-  #if (TFT_RGB_ORDER == 1)
-    #define TFT_MAD_COLOR_ORDER TFT_MAD_RGB
-  #else
-    #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
-  #endif
+    #if (TFT_RGB_ORDER == 1)
+        #define TFT_MAD_COLOR_ORDER TFT_MAD_RGB
+    #else
+        #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
+    #endif
 #else
-  #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
+    #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
 #endif
 
 #define TFT_INVOFF  0x20

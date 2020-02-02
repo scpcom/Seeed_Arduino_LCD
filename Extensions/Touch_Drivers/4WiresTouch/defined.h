@@ -7,9 +7,9 @@
 #include "User_Setup.h"
 
 #if defined(ARDUINO_ARCH_AVR)
-  #include <pgmspace.h>
+    #include <pgmspace.h>
 #else
-  #include <avr/pgmspace.h>
+    #include <avr/pgmspace.h>
 #endif
 
 
@@ -25,20 +25,22 @@ unsigned char _xp = XP;
 
 #ifdef AVERAGE
 #define AVERAGETIME 3
-static int avr_analog(int adpin)
-{
+static int avr_analog(int adpin) {
     int sum = 0;
     int max = 0;
     int min = 1024;
-    for(int i = 0; i<AVERAGETIME; i++)
-    {
+    for (int i = 0; i < AVERAGETIME; i++) {
         int tmp = analogRead(adpin);
-        if(tmp > max)max = tmp;
-        if(tmp < min)min = tmp;
+        if (tmp > max) {
+            max = tmp;
+        }
+        if (tmp < min) {
+            min = tmp;
+        }
         sum += tmp;
         //   sum+=analogRead(adpin);
     }
-    return (sum-min-max)/(AVERAGETIME-2);
+    return (sum - min - max) / (AVERAGETIME - 2);
 
 }
 

@@ -21,27 +21,27 @@ TFT_eSPI tft = TFT_eSPI();
 //====================================================================
 
 void setup(void) {
-  Serial.begin(115200);
-  Serial.println("\n\nStarting...");
+    Serial.begin(115200);
+    Serial.println("\n\nStarting...");
 
-  tft.init();
+    tft.init();
 }
 
 //====================================================================
 
 void loop() {
 
-  uint16_t x, y;
+    uint16_t x, y;
 
-  tft.getTouchRaw(&x, &y);
-  
-  Serial.printf("x: %i     ", x);
+    tft.getTouchRaw(&x, &y);
 
-  Serial.printf("y: %i     ", y);
+    Serial.printf("x: %i     ", x);
 
-  Serial.printf("z: %i \n", tft.getTouchRawZ());
+    Serial.printf("y: %i     ", y);
 
-  delay(250);
+    Serial.printf("z: %i \n", tft.getTouchRawZ());
+
+    delay(250);
 
 }
 

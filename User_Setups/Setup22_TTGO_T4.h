@@ -23,7 +23,7 @@
 #define SMOOTH_FONT
 
 //#define SPI_FREQUENCY  27000000
-  #define SPI_FREQUENCY  40000000   // Maximum for ILI9341
+#define SPI_FREQUENCY  40000000   // Maximum for ILI9341
 
 #define USE_HSPI_PORT
 

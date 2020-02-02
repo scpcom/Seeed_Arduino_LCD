@@ -20,7 +20,7 @@
 #include <FS.h>
 
 #ifdef ESP32
-  #include "SPIFFS.h"  // For ESP32 only
+    #include "SPIFFS.h"  // For ESP32 only
 #endif
 
 // Call up the TFT library
@@ -32,33 +32,33 @@ TFT_eSPI tft = TFT_eSPI();
 //====================================================================================
 //                                    Setup
 //====================================================================================
-void setup()
-{
-  Serial.begin(115200);
+void setup() {
+    Serial.begin(115200);
 
-  if (!SPIFFS.begin()) {
-    Serial.println("SPIFFS initialisation failed!");
-    while (1) yield(); // Stay here twiddling thumbs waiting
-  }
-  Serial.println("\r\nSPIFFS initialised.");
+    if (!SPIFFS.begin()) {
+        Serial.println("SPIFFS initialisation failed!");
+        while (1) {
+            yield();    // Stay here twiddling thumbs waiting
+        }
+    }
+    Serial.println("\r\nSPIFFS initialised.");
 
-  // Now initialise the TFT
-  tft.begin();
-  tft.setRotation(0);  // 0 & 2 Portrait. 1 & 3 landscape
-  tft.fillScreen(TFT_BLACK);
+    // Now initialise the TFT
+    tft.begin();
+    tft.setRotation(0);  // 0 & 2 Portrait. 1 & 3 landscape
+    tft.fillScreen(TFT_BLACK);
 }
 
 //====================================================================================
 //                                    Loop
 //====================================================================================
-void loop()
-{
-  int x = random(tft.width()  - 128);
-  int y = random(tft.height() - 160);
+void loop() {
+    int x = random(tft.width()  - 128);
+    int y = random(tft.height() - 160);
 
-  drawBmp("/parrot.bmp", x, y);
+    drawBmp("/parrot.bmp", x, y);
 
-  delay(1000);
+    delay(1000);
 }
 //====================================================================================
 

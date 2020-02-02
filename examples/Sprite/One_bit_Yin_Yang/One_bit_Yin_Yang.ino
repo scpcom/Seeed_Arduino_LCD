@@ -28,33 +28,34 @@ TFT_eSprite img = TFT_eSprite(&tft);  // Sprite class
 
 
 // -------------------------------------------------------------------------
-void setup(void)
-{
-  tft.begin();
-  tft.setRotation(0);
-  tft.fillScreen(TFT_BLUE);
+void setup(void) {
+    tft.begin();
+    tft.setRotation(0);
+    tft.fillScreen(TFT_BLUE);
 
-  img.setColorDepth(COLOR_DEPTH);
-  img.createSprite(RADIUS*2+1, RADIUS*2+1);
-  img.fillSprite(TFT_BLACK);
+    img.setColorDepth(COLOR_DEPTH);
+    img.createSprite(RADIUS * 2 + 1, RADIUS * 2 + 1);
+    img.fillSprite(TFT_BLACK);
 }
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 void loop() {
-  // Draw Yin and Yang symbol circles into Sprite
-  yinyang(RADIUS, RADIUS, angle, RADIUS);
+    // Draw Yin and Yang symbol circles into Sprite
+    yinyang(RADIUS, RADIUS, angle, RADIUS);
 
-  // Set the 2 pixel palette colours that 1 and 0 represent on the display screen
-  img.setBitmapColor(TFT_WHITE, TFT_BLACK); 
+    // Set the 2 pixel palette colours that 1 and 0 represent on the display screen
+    img.setBitmapColor(TFT_WHITE, TFT_BLACK);
 
-  // Push Sprite image to the TFT screen at x, y
-  img.pushSprite(tft.width()/2 - RADIUS, 0); // Plot sprite
+    // Push Sprite image to the TFT screen at x, y
+    img.pushSprite(tft.width() / 2 - RADIUS, 0); // Plot sprite
 
-  angle+=3;                   //Increment angle to rotate circle positions
-  if (angle > 359) angle = 0; // Limit angle range
+    angle += 3;                 //Increment angle to rotate circle positions
+    if (angle > 359) {
+        angle = 0;    // Limit angle range
+    }
 
-  // Slow things down
-  delay(WAIT);
+    // Slow things down
+    delay(WAIT);
 }
 // -------------------------------------------------------------------------
 
@@ -66,20 +67,19 @@ void loop() {
 // start_angle = 0 - 359
 // r = radius
 
-void yinyang(int x, int y, int start_angle, int r)
-{
-  int x1 = 0; // getCoord() will update these
-  int y1 = 0;
+void yinyang(int x, int y, int start_angle, int r) {
+    int x1 = 0; // getCoord() will update these
+    int y1 = 0;
 
-  getCoord(x, y, &x1, &y1, r/2, start_angle); // Get x1 ,y1
-  img.fillCircle( x1,  y1, r/2, TFT_WHITE);
-  img.fillCircle( x1,  y1, r/8, TFT_BLACK);
+    getCoord(x, y, &x1, &y1, r / 2, start_angle); // Get x1 ,y1
+    img.fillCircle(x1,  y1, r / 2, TFT_WHITE);
+    img.fillCircle(x1,  y1, r / 8, TFT_BLACK);
 
-  getCoord(x, y, &x1, &y1, r/2, start_angle + 180);
-  img.fillCircle( x1,  y1, r/2, TFT_BLACK);
-  img.fillCircle( x1,  y1, r/8, TFT_WHITE);
-  
-  img.drawCircle(x, y, r, TFT_WHITE);
+    getCoord(x, y, &x1, &y1, r / 2, start_angle + 180);
+    img.fillCircle(x1,  y1, r / 2, TFT_BLACK);
+    img.fillCircle(x1,  y1, r / 8, TFT_WHITE);
+
+    img.drawCircle(x, y, r, TFT_WHITE);
 }
 
 // =========================================================================
@@ -87,11 +87,10 @@ void yinyang(int x, int y, int start_angle, int r)
 // =========================================================================
 // Coordinates are returned to caller via the xp and yp pointers
 #define RAD2DEG 0.0174532925
-void getCoord(int x, int y, int *xp, int *yp, int r, int a)
-{
-  float sx1 = cos( (a-90) * RAD2DEG );    
-  float sy1 = sin( (a-90) * RAD2DEG );
-  *xp =  sx1 * r + x;
-  *yp =  sy1 * r + y;
+void getCoord(int x, int y, int* xp, int* yp, int r, int a) {
+    float sx1 = cos((a - 90) * RAD2DEG);
+    float sy1 = sin((a - 90) * RAD2DEG);
+    *xp =  sx1 * r + x;
+    *yp =  sy1 * r + y;
 }
 

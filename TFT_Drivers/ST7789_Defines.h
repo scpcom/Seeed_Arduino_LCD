@@ -1,14 +1,14 @@
 // Change the width and height if required (defined in portrait mode)
 // or use the constructor to over-ride defaults
 #ifndef TFT_WIDTH
-  #define TFT_WIDTH  240
+    #define TFT_WIDTH  240
 #endif
 #ifndef TFT_HEIGHT
-  #define TFT_HEIGHT 320
+    #define TFT_HEIGHT 320
 #endif
 
 #if (TFT_HEIGHT == 240) && (TFT_WIDTH == 240)
-  #define CGRAM_OFFSET
+    #define CGRAM_OFFSET
 #endif
 
 // Delay between some initialisation commands
@@ -46,17 +46,17 @@
 #define TFT_MAD_GS  0x01
 
 #ifdef TFT_RGB_ORDER
-  #if (TFT_RGB_ORDER == 1)
-    #define TFT_MAD_COLOR_ORDER TFT_MAD_RGB
-  #else
-    #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
-  #endif
+    #if (TFT_RGB_ORDER == 1)
+        #define TFT_MAD_COLOR_ORDER TFT_MAD_RGB
+    #else
+        #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
+    #endif
 #else
-  #ifdef CGRAM_OFFSET
-    #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
-  #else
-    #define TFT_MAD_COLOR_ORDER TFT_MAD_RGB
-  #endif
+    #ifdef CGRAM_OFFSET
+        #define TFT_MAD_COLOR_ORDER TFT_MAD_BGR
+    #else
+        #define TFT_MAD_COLOR_ORDER TFT_MAD_RGB
+    #endif
 #endif
 
 #define TFT_IDXRD   0x00 // ILI9341 only, indexed control register read

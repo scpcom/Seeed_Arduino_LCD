@@ -123,26 +123,26 @@
 
 // ###### EDIT THE PIN NUMBERS IN THE LINES FOLLOWING TO SUIT YOUR BOARD SETUP ######
 
-// For seeed samd21 
+// For seeed samd21
 //#define HASSPI 1
 //#define SPICOM SPI
-//#define TFT_CS   5  
-//#define TFT_DC   6  
+//#define TFT_CS   5
+//#define TFT_DC   6
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
 // For K210 -
 //#define HASSPI 1
 //#define SPICOM SPI
-//#define TFT_CS   29  
-//#define TFT_DC   25 
-//#define TFT_RST  33 
+//#define TFT_CS   29
+//#define TFT_DC   25
+//#define TFT_RST  33
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 
 //For seeed GroveUI - u
 #define HASSPI 1
 #define SPICOM   LCD_SPI
-#define TFT_CS   LCD_SS_PIN  
-#define TFT_DC   LCD_DC  
+#define TFT_CS   LCD_SS_PIN
+#define TFT_DC   LCD_DC
 #define TFT_RST  LCD_RESET  //Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 #define TFT_BL   LCD_BACKLIGHT
 #define TFT_BACKLIGHT_ON HIGH
@@ -161,11 +161,11 @@
 
 // #define TOUCH
 
-//for four wire touch 
+//for four wire touch
 //#define FOURWIRETOUCH
 //#define YP A2   // must be an analog pin, use "An" notation!
 //#define XM A1   // must be an analog pin, use "An" notation!
-//#define XP A3   // can be a digital pin, 
+//#define XP A3   // can be a digital pin,
 
 //for adx
 
@@ -174,7 +174,7 @@
 // #define XPT_MOSI PE2
 // #define XPT_MISO PE3
 // #define XPT_CLK PE0
-// #define XPT_PENIRQ PE4 
+// #define XPT_PENIRQ PE4
 
 
 
@@ -245,8 +245,8 @@
 // Transactions are automatically enabled by the library for an ESP32 (to use HAL mutex)
 // so changing it here has no effect
 
- #define SUPPORT_TRANSACTIONS
- #define SPI_HAS_TRANSACTION
+#define SUPPORT_TRANSACTIONS
+#define SPI_HAS_TRANSACTION
 
 
 

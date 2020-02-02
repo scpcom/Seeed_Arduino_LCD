@@ -1,10 +1,10 @@
 // Change the width and height if required (defined in portrait mode)
 // or use the constructor to over-ride defaults
 #ifndef TFT_WIDTH
-  #define TFT_WIDTH  128
+    #define TFT_WIDTH  128
 #endif
 #ifndef TFT_HEIGHT
-  #define TFT_HEIGHT 160
+    #define TFT_HEIGHT 160
 #endif
 
 
@@ -22,40 +22,40 @@
 
 // Setup the tab color that will be used by the library setRotation() and setup command list
 #if defined (ST7735_INITB)
-  #define TAB_COLOUR INITB
-  
+    #define TAB_COLOUR INITB
+
 #elif defined (ST7735_GREENTAB)
-  #define TAB_COLOUR INITR_GREENTAB
-  #define CGRAM_OFFSET
-  
+    #define TAB_COLOUR INITR_GREENTAB
+    #define CGRAM_OFFSET
+
 #elif defined (ST7735_GREENTAB2)
-  #define TAB_COLOUR INITR_GREENTAB2
-  #define CGRAM_OFFSET
+    #define TAB_COLOUR INITR_GREENTAB2
+    #define CGRAM_OFFSET
 
 #elif defined (ST7735_GREENTAB3)
-  #define TAB_COLOUR INITR_GREENTAB3
-  #define CGRAM_OFFSET
+    #define TAB_COLOUR INITR_GREENTAB3
+    #define CGRAM_OFFSET
 
 #elif defined (ST7735_GREENTAB128)
-  #define TAB_COLOUR INITR_GREENTAB128
-  #define CGRAM_OFFSET
- 
+    #define TAB_COLOUR INITR_GREENTAB128
+    #define CGRAM_OFFSET
+
 #elif defined (ST7735_GREENTAB160x80)
-  #define TAB_COLOUR INITR_GREENTAB160x80
-  #define CGRAM_OFFSET
+    #define TAB_COLOUR INITR_GREENTAB160x80
+    #define CGRAM_OFFSET
 
 #elif defined (ST7735_REDTAB160x80)
-  #define TAB_COLOUR INITR_REDTAB160x80
-  #define CGRAM_OFFSET
- 
+    #define TAB_COLOUR INITR_REDTAB160x80
+    #define CGRAM_OFFSET
+
 #elif defined (ST7735_REDTAB)
-  #define TAB_COLOUR INITR_REDTAB
-  
+    #define TAB_COLOUR INITR_REDTAB
+
 #elif defined (ST7735_BLACKTAB)
-  #define TAB_COLOUR INITR_BLACKTAB
+    #define TAB_COLOUR INITR_BLACKTAB
 
 #else // Make sure it is not undefined
-  #define TAB_COLOUR INITR_BLACKTAB
+    #define TAB_COLOUR INITR_BLACKTAB
 #endif
 
 
