@@ -1,4 +1,4 @@
-# Seeed-Arduino-LCD
+# Seeed-Arduino-LCD  [![Build Status](https://travis-ci.com/Seeed-Studio/Seeed_Arduino_LCD.svg?branch=master)](https://travis-ci.com/Seeed-Studio/Seeed_Arduino_LCD)
 
 ### Introduction
 
