@@ -1,0 +1,97 @@
+language: generic
+matrix:
+  include:
+    - env:
+        - BOARD = "arduino:avr:uno"
+    - env:
+        - BOARD = "Seeeduino:samd:seeed_XIAO_m0"
+# default phases
+before_install:
+  - mkdir -p "$HOME/bin"
+  - curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR="$HOME/bin" sh
+  - export PATH="$PATH:$HOME/bin"
+  - arduino-cli core update-index --additional-urls https://downloads.arduino.cc/packages/package_index.json
+  - arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json
+  - arduino-cli  core install arduino:avr --additional-urls https://downloads.arduino.cc/packages/package_index.json
+  - arduino-cli  core install Seeeduino:samd --additional-urls https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json
+  - |
+    installLibrary() {
+      local -r repositoryFullName="$1"
+      local -r repositoryName="${repositoryFullName##*/}"
+      # clone repository to the libraries folder of the sketchbook
+      git clone https://github.com/${repositoryFullName} "${HOME}/Arduino/libraries/${repositoryName}"
+      cd "${HOME}/Arduino/libraries/${repositoryName}"
+      cd "${TRAVIS_BUILD_DIR}"
+    }
+- installLibrary Seeeed-Studio/Seeed_Arduino_LCD
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch 480 x 320;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch 320 x 240;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch ePaper;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch Test and diagnostics;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch Sprite;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch Generic;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch Smooth Fonts;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch 160 x 128;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch 480 x 320;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch 320 x 240;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch ePaper;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch Test and diagnostics;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch Sprite;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch Generic;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch Smooth Fonts;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch 160 x 128;
+      fi
+notifications:
+  webhooks:
+    urls:
+      - https://www.travisbuddy.com/
+    on_success: never
+    on_failure: always
+
