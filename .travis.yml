@@ -2,9 +2,9 @@ language: generic
 matrix:
   include:
     - env:
-        - BOARD="arduino:avr:uno"
-    - env:
         - BOARD="Seeeduino:samd:seeed_XIAO_m0"
+    - env:
+        - BOARD="Seeeduino:samd:seeed_grove_ui_wireless"
 # default phases
 before_install:
   - mkdir -p "$HOME/bin"
@@ -24,79 +24,17 @@ before_install:
       cd "${TRAVIS_BUILD_DIR}"
     }
   - installLibrary Seeed-Studio/Seeed_Arduino_LCD
-  - buildExampleSketch() { arduino-cli compile  --warnings all --fqbn $BOARD $PWD/examples/$1 --verbose; }
-  - buildExampleUtilitySketch() { arduino-cli compile --warnings all --fqbn $BOARD $PWD/examples/utility/$1 --verbose; }
+  - buildExampleSketch() { arduino-cli compile  --warnings all --fqbn $BOARD $PWD/examples/"$1" --verbose; }
+  - buildExampleUtilitySketch() { arduino-cli compile --warnings all --fqbn $BOARD $PWD/examples/utility/"$1" --verbose; }
 install:
   - mkdir -p $HOME/Arduino/libraries
 script:
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch 480 x 320;
-      fi
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch 320 x 240;
-      fi
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch ePaper;
-      fi
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch Test and diagnostics;
-      fi
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch Sprite;
-      fi
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch Generic;
-      fi
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch Smooth Fonts;
-      fi
-    - |
-      if [ "$BOARD" == "arduino:avr:uno" ]; then
-        buildExampleSketch 160 x 128;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch 480 x 320;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch 320 x 240;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch ePaper;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch Test and diagnostics;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch Sprite;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch Generic;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch Smooth Fonts;
-      fi
-    - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch 160 x 128;
-      fi
+  - |
+      buildExampleSketch '320 x 240/TFT_graphicstest_one_lib';
 notifications:
   webhooks:
     urls:
       - https://www.travisbuddy.com/
     on_success: never
     on_failure: always
-
+    
