@@ -331,10 +331,6 @@ script:
       fi
   - |
       if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
-        buildExampleSketch '320 x 240/Cellular_Automata';
-      fi
-  - |
-      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
         buildExampleSketch '320 x 240/TFT_graphicstest_one_lib';
       fi
   - |
