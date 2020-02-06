@@ -49,7 +49,7 @@ void loop() {
     // Draw bitmap with top left corner at x,y with foreground and background colors
     // Bits set to 1 plot as the defined fg color, bits set to 0 are plotted as bg color
     //              x  y  xbm   xbm width  xbm height  fg color   bg color
-    tft.drawXBitmap(x, y, logo, logoWidth, logoHeight, TFT_WHITE, TFT_RED);
+    tft.drawXBitmap(x, y, logo, logoWidth, logoHeight, TFT_WHITE, TFT_GREEN);
 
     delay(500);
 
