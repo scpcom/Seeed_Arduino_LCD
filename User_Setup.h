@@ -147,6 +147,7 @@
 #define TFT_RST  LCD_RESET  //Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 #define TFT_BL   LCD_BACKLIGHT
 #define TFT_BACKLIGHT_ON HIGH
+#define TFT_BACKLINGT_V 2000
 #elif defined(ARDUINO_ARCH_SAMD)
 #define HASSPI 1
 #define SPICOM SPI
@@ -210,7 +211,7 @@
 
 // Comment out the #define below to stop the SPIFFS filing system and smooth font code being loaded
 // this will save ~20kbytes of FLASH
-//#define SMOOTH_FONT
+#define SMOOTH_FONT
 
 
 // ##################################################################################
