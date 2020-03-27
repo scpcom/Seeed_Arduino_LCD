@@ -257,9 +257,7 @@
 // so changing it here has no effect
 
 #define SUPPORT_TRANSACTIONS
-#ifndef SPI_HAS_TRANSACTION
-#define SPI_HAS_TRANSACTION
-#endif
+
 
 
 

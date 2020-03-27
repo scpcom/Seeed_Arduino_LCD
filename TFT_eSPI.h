@@ -15,7 +15,7 @@
 #ifndef _TFT_eSPIH_
 #define _TFT_eSPIH_
 
-#define TFT_ESPI_VERSION "1.4.18"
+#define TFT_ESPI_VERSION "1.6.1"
 
 // Include header file that defines the fonts loaded, the TFT drivers
 // available and the pins to be used
@@ -428,7 +428,7 @@ public:
 #if defined(TFT_BL)
     void setBacklight(uint32_t backlight);
     uint32_t backlight();
-#endif;
+#endif
 
     // These are virtual so the TFT_eSprite class can override them with sprite specific functions
     virtual void drawPixel(int32_t x, int32_t y, uint32_t color),
