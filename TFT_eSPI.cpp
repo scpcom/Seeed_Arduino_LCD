@@ -373,13 +373,13 @@ void TFT_eSPI::init(uint8_t tc) {
     setRotation(rotation);
 
     #if defined (TFT_BL) && defined (TFT_BACKLIGHT_ON)
-    pinMode(TFT_BL, OUTPUT);
     digitalWrite(TFT_BL, TFT_BACKLIGHT_ON);
+    pinMode(TFT_BL, OUTPUT);
     #else
     #if defined (TFT_BL) && defined (M5STACK)
     // Turn on the back-light LED
-    pinMode(TFT_BL, OUTPUT);
     digitalWrite(TFT_BL, HIGH);
+    pinMode(TFT_BL, OUTPUT);
     #endif
     #endif
     #ifdef TOUCH
@@ -388,23 +388,6 @@ void TFT_eSPI::init(uint8_t tc) {
     #endif
     #endif
 }
-
-/***************************************************************************************
-** Function name:           setBacklight
-** Description:             set the Backlight
-***************************************************************************************/
-#if defined (TFT_BL)
-void TFT_eSPI::setBacklight(uint32_t backlight)
-{
-    _backlight = backlight;
-    analogWrite(TFT_BL, _backlight);
-}
-
-uint32_t TFT_eSPI::backlight()
-{
-    return  _backlight;
-}
-#endif;
 
 
 /***************************************************************************************

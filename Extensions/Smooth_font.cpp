@@ -80,6 +80,13 @@ void TFT_eSPI::loadFont(String fontName, bool flash) {
         //                                  some fonts can overlay in y direction so may need a user adjust value
 
     */
+
+    spiffs = flash;
+
+    if (spiffs) {
+        fontFS = SPIFFS;
+    }
+
     unloadFont();
 
     // Avoid a crash on the ESP32 if the file does not exist
@@ -88,13 +95,13 @@ void TFT_eSPI::loadFont(String fontName, bool flash) {
         return;
     }
 
-    fontFile = fontFS.open( "/" + fontName + ".vlw", FA_READ);
+    fontFile = fontFS.open("/" + fontName + ".vlw", "r");
 
     if (!fontFile) {
         return;
     }
 
-    fontFile.seek(0);
+    fontFile.seek(0, fs::SeekSet);
 
     gFont.gCount   = (uint16_t)readInt32(); // glyph count in file
     readInt32(); // vlw encoder version - discard
@@ -154,7 +161,7 @@ void TFT_eSPI::loadMetrics(uint16_t gCount) {
     #endif
 
     uint16_t gNum = 0;
-    fontFile.seek(headerPtr);
+    fontFile.seek(headerPtr, fs::SeekSet);
     while (gNum < gCount) {
         gUnicode[gNum]  = (uint16_t)readInt32(); // Unicode code point value
         gHeight[gNum]   = (uint8_t)readInt32();  // Height of glyph
@@ -451,7 +458,7 @@ void TFT_eSPI::drawGlyph(uint16_t code) {
             cursor_x -= gdX[gNum];
         }
 
-        fontFile.seek(gBitmap[gNum]); // This is taking >30ms for a significant position shift
+        fontFile.seek(gBitmap[gNum], fs::SeekSet); // This is taking >30ms for a significant position shift
 
         uint8_t pbuffer[gWidth[gNum]];
 
