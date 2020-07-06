@@ -2645,11 +2645,11 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color) {
 ** Description:             push a single pixel
 ***************************************************************************************/
 void TFT_eSPI::pushColor(uint16_t color) {
-    com_begin();
+    // com_begin();
 
     tft_Write_16(color);
 
-    com_end();
+    // com_end();
 }
 
 
@@ -2658,7 +2658,7 @@ void TFT_eSPI::pushColor(uint16_t color) {
 ** Description:             push a single colour to "len" pixels
 ***************************************************************************************/
 void TFT_eSPI::pushColor(uint16_t color, uint32_t len) {
-    com_begin();
+    // com_begin();
 
     #ifdef RPI_WRITE_STROBE
     uint8_t colorBin[] = { (uint8_t)(color >> 8), (uint8_t) color };
@@ -2673,7 +2673,7 @@ void TFT_eSPI::pushColor(uint16_t color, uint32_t len) {
     writeBlock(color, len);
     #endif
 
-    com_end();
+    // com_end();
 }
 
 /***************************************************************************************
@@ -2720,7 +2720,7 @@ void TFT_eSPI::writeColor(uint16_t color, uint32_t len) {
 // Assumed that setAddrWindow() has previously been called
 
 void TFT_eSPI::pushColors(uint8_t* data, uint32_t len) {
-    com_begin();
+    // com_begin();
 
     #if defined (RPI_WRITE_STROBE)
     while (len >= 64) {
@@ -2760,7 +2760,7 @@ void TFT_eSPI::pushColors(uint8_t* data, uint32_t len) {
     #endif
     #endif
 
-    com_end();
+    // com_end();
 }
 
 
@@ -2769,7 +2769,7 @@ void TFT_eSPI::pushColors(uint8_t* data, uint32_t len) {
 ** Description:             push an array of pixels, for image drawing
 ***************************************************************************************/
 void TFT_eSPI::pushColors(uint16_t* data, uint32_t len, bool swap) {
-    com_begin();
+    // com_begin();
 
     #if defined (ILI9488_DRIVER)
     if (swap) while (len--) {
@@ -2796,8 +2796,7 @@ void TFT_eSPI::pushColors(uint16_t* data, uint32_t len, bool swap) {
 
     #endif
 
-
-    com_end();
+    // com_end();
 }
 
 
