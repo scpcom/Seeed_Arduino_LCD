@@ -34,7 +34,7 @@
 #define AA_FONT_LARGE "NotoSansBold36"
 #define AA_FONT_MONO  "NotoSansMonoSCB20" // NotoSansMono-SemiCondensedBold 20pt
 // Font files are stored in SPIFFS, so load the linbrary
-#include <FS.h>
+#include <Seeed_FS.h>
 
 #include <SPI.h>
 #include <TFT_eSPI.h>       // Hardware-specific library

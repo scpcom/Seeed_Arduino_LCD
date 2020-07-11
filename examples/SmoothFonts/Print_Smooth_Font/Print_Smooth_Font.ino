@@ -31,7 +31,7 @@
 
 // Font file is stored in SPIFFS
 #define FS_NO_GLOBALS
-#include <FS.h>
+#include <Seeed_FS.h>
 
 // Graphics and font library
 #include <TFT_eSPI.h>
