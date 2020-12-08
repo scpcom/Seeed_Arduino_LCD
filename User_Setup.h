@@ -155,6 +155,7 @@
 #define TFT_DC   6
 #define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 #elif defined(BOARD_GD32_RISCV_DEV)
+#include "EXMC.h"
 #define TFT_RST PE1
 #define TFT_BL PD12
 #define TFT_BACKLIGHT_ON LOW
