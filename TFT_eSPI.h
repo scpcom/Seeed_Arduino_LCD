@@ -664,9 +664,11 @@ protected:
     GFXfont *gfxFont;
 #endif
 
+#if !defined(TFT_NO_EXTENSIONS)
 // Load the Touch extension
 #ifdef TOUCH
 #include "Extensions/Touch.h"
+#endif
 #endif
 
 // Load the Anti-aliased font extension
@@ -676,10 +678,12 @@ protected:
 
 }; // End of class TFT_eSPI
 
+#if !defined(TFT_NO_EXTENSIONS)
 // Load the Button Class
 #include "Extensions/Button.h"
 
 // Load the Sprite Class
 #include "Extensions/Sprite.h"
+#endif
 
 #endif

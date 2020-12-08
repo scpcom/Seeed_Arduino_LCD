@@ -4279,12 +4279,14 @@ void TFT_eSPI::getSetup(setup_t& tft_settings) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
+#if !defined(TFT_NO_EXTENSIONS)
 #ifdef TOUCH
     #include "Extensions/Touch.cpp"
     #include "Extensions/Button.cpp"
 #endif
 
 #include "Extensions/Sprite.cpp"
+#endif
 
 #ifdef SMOOTH_FONT
     #include "Extensions/Smooth_font.cpp"
