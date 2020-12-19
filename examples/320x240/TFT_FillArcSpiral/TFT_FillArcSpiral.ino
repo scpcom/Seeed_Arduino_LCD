@@ -3,7 +3,6 @@
 // Sketch also includes (but does not use) a function to change the brightness of a colour
 
 #include <TFT_eSPI.h> // Hardware-specific library
-#include <SPI.h>
 
 TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 

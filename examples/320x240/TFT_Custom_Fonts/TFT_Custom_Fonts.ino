@@ -22,7 +22,6 @@
 // Note the the tilda symbol ~ does not exist in some fonts at the moment
 #define TEXT "abc MWy 123 |" // Text that will be printed on screen in any font
 
-#include "SPI.h"
 #include "TFT_eSPI.h"
 
 // Stock font and GFXFF reference handle

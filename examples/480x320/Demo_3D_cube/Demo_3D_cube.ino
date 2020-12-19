@@ -13,7 +13,6 @@
 #define BLACK 0x0000
 #define WHITE 0xFFFF
 
-#include <SPI.h>
 
 #include <TFT_eSPI.h> // Hardware-specific library
 

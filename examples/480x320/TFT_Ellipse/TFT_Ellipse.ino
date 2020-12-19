@@ -4,7 +4,6 @@
     This sketch does not use any fonts.
 */
 
-#include <SPI.h>
 
 #include <TFT_eSPI.h> // Hardware-specific library
 

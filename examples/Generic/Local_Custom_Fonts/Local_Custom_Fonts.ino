@@ -43,7 +43,6 @@
 #define TEST_TEXT "ßäöü ñâàå"   // Text that will be printed on screen in the font
 //#define TEST_TEXT "Hello"     // Text that will be printed on screen in the font
 
-#include "SPI.h"
 #include "TFT_eSPI.h"
 
 // The custom font file attached to this sketch must be included

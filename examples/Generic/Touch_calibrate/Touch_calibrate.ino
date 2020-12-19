@@ -5,7 +5,6 @@
     The sketch has been tested on the ESP8266 and screen with XPT2046 driver.
 */
 
-#include <SPI.h>
 #include <TFT_eSPI.h>      // Hardware-specific library
 
 TFT_eSPI tft = TFT_eSPI(); // Invoke custom library

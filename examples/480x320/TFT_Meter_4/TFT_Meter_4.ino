@@ -17,7 +17,6 @@
 // Define meter size as multiplier of 240 pixels wide 1.0 and 1.3333 work OK
 #define M_SIZE 1.3333
 
-#include <SPI.h>
 
 #include <TFT_eSPI.h> // Hardware-specific library
 

@@ -47,7 +47,6 @@
 // Font files are stored in SPIFFS, so load the linbrary
 #include <Seeed_FS.h>
 
-#include <SPI.h>
 #include <TFT_eSPI.h>       // Hardware-specific library
 
 TFT_eSPI    tft = TFT_eSPI();
