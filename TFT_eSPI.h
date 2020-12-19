@@ -99,12 +99,13 @@
 #include <Arduino.h>
 #include <Print.h>
 
-#ifdef KENDRYTE_K210
 #include <avr/pgmspace.h>
-#include <SPIClass.h>
-#else
-#include <avr/pgmspace.h>
-#include <SPI.h>
+#ifdef HASSPI
+    #ifdef KENDRYTE_K210
+        #include <SPIClass.h>
+    #else
+        #include <SPI.h>
+    #endif
 #endif
 
 #ifdef SMOOTH_FONT
@@ -600,7 +601,9 @@ public:
 
     void getSetup(setup_t &tft_settings); // Sketch provides the instance to populate
 
+#ifdef HASSPI
     static SPIClass &getSPIinstance(void);
+#endif
 
     int32_t cursor_x, cursor_y, padX;
     uint32_t textcolor, textbgcolor;
