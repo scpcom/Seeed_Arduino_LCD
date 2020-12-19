@@ -154,6 +154,27 @@
 #define TFT_CS   5
 #define TFT_DC   6
 #define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+#elif defined(BOARD_SIPEED_LONGAN_NANO)
+#undef ILI9341_DRIVER
+#undef TFT_WIDTH
+#undef TFT_HEIGHT
+#define ST7735_DRIVER
+#define TFT_WIDTH  80
+#define TFT_HEIGHT 160
+#define ST7735_GREENTAB160x80
+#define HASSPI 1
+#define SPICOM SPI
+#define TFT_MISO PA6
+#define TFT_MOSI PA7
+#define TFT_SCLK PA5
+#define TFT_CS    PB2  // Chip select control pin
+#define TFT_DC    PB0  // Data Command control pin
+#define TFT_RST   PB1  // Reset pin (could connect to RST pin)
+//#define TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to board RST
+//#define SPI_FREQUENCY  20000000
+#define SPI_FREQUENCY  27000000 // Actually sets it to 26.67MHz = 80/3
+#define TFT_NO_EXTENSIONS
+#define TFT_FONT_MAX 4
 #elif defined(BOARD_GD32_RISCV_DEV)
 #include "EXMC.h"
 #define TFT_RST PE1
@@ -254,6 +275,7 @@
 // With an ILI9163 display 27 MHz works OK.
 // The RPi typically only works at 20MHz maximum.
 
+#ifndef SPI_FREQUENCY
 // #define SPI_FREQUENCY   1000000
 // #define SPI_FREQUENCY   5000000
 // #define SPI_FREQUENCY  10000000
@@ -261,6 +283,7 @@
 #define SPI_FREQUENCY  50000000 // Actually sets it to 26.67MHz = 80/3
 // #define SPI_FREQUENCY  40000000 // Maximum to use SPIFFS
 // #define SPI_FREQUENCY  80000000
+#endif
 
 // Optional reduced SPI frequency for reading TFT
 #define SPI_READ_FREQUENCY  20000000

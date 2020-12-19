@@ -26,6 +26,10 @@
     #endif
 #endif
 
+#if defined(BOARD_SIPEED_LONGAN_NANO)
+SPIClass SPI(TFT_MOSI, TFT_MISO, TFT_SCLK);
+#endif
+
 #ifdef HASSPI
     TFT_Interface _com(&SPICOM);
 #else
