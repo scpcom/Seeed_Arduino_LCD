@@ -10,12 +10,13 @@
 #define WHITE 0xFFFF
 #define GREY  0x5AEB
 
-#include <Sipeed_GD32V_LCD.h>
+#include <TFT_eSPI.h>
 
-#define LCD_W 160
-#define LCD_H 80
+// Use hardware SPI
+TFT_eSPI tft = TFT_eSPI();
 
-Sipeed_GD32V_LCD tft(LCD_W, LCD_H);
+#define LCD_H TFT_WIDTH
+#define LCD_W TFT_HEIGHT
 
 int16_t h = LCD_H;
 int16_t w = LCD_W;
@@ -65,7 +66,7 @@ void setup(void) {
 
     tft.begin();
 
-    tft.setRotation(0);
+    tft.setRotation(1);
 
     tft.fillScreen(BLACK);
     //tft.fillScreen(GREY);
