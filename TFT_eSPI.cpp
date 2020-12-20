@@ -4173,7 +4173,7 @@ void writeBlock(uint16_t color, uint32_t repeat) {
     while (repeat > 0) {
         repeat -= 8;
 
-    out8: _com.transfer16(color);
+    _com.transfer16(color);
     out7: _com.transfer16(color);
     out6: _com.transfer16(color);
     out5: _com.transfer16(color);
