@@ -140,7 +140,7 @@ void loop(void) {
     tft.setTextSize(1);
     tft.setTextColor(TFT_WHITE);
 #ifdef GD32V
-    tft.println(F("SPI TFT on GD32V"));
+    tft.println(F("TFT on GD32V"));
 #else
     tft.println(F("SPI TFT on ESP8266"));
 #endif
@@ -155,82 +155,81 @@ void loop(void) {
     //tft.print((uint16_t)_end - (uint16_t)__data_start, HEX);
 
     tft.setTextColor(TFT_GREEN);
-    tft.print(F("Benchmark        usec"));
+    tft.print(F("Bench    usec"));
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("HaD logo   "));
+    tft.print(F("HaD lg"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecHaD);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Clear      "));
+    tft.print(F("Clr "));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecFillScreen);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Text       "));
+    tft.print(F("Text  "));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecText);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Pixels     "));
+    tft.print(F("Pixels"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecPixels);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Lines      "));
+    tft.print(F("Lines "));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecLines);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("H/V Lines  "));
+    tft.print(F("H/V Li"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecFastLines);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Rectangles "));
+    tft.print(F("Rects "));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecRects);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Rects-Fill "));
+    tft.print(F("R-Fill"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecFilledRects);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Circles    "));
+    tft.print(F("Circle"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecCircles);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("CircleFill "));
+    tft.print(F("C-Fill"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecFilledCircles);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Triangles  "));
+    tft.print(F("Tris  "));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecTriangles);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Tris-Fill  "));
+    tft.print(F("T-Fill"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecFilledTrangles);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Rnd-Rects  "));
+    tft.print(F("RRects"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecRoundRects);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("RRects-Fill"));
+    tft.print(F("RRFill"));
     tft.setTextColor(TFT_YELLOW);
     printnice(usedFilledRoundRects);
 
     tft.setTextSize(1);
-    tft.println(F(""));
     tft.setTextColor(TFT_GREEN);
-    tft.print(F("Benchmark Completed!"));
+    tft.print(F("Completed!"));
 
     delay(15 * 1000L);
 }
@@ -243,11 +242,11 @@ void printnice(int32_t v) {
         *p = ',';
 
     }
-    while (strlen(str) < 10) {
+    while (strlen(str) < 7) {
         memmove(str + 1, str, strlen(str) + 1);
         *str = ' ';
     }
-    tft.print(str);
+    tft.println(str);
 }
 
 static inline uint32_t micros_start() __attribute__((always_inline));
