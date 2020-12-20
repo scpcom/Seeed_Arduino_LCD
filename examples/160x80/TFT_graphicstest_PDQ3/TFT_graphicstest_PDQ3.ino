@@ -139,7 +139,11 @@ void loop(void) {
 
     tft.setTextSize(1);
     tft.setTextColor(TFT_WHITE);
+#ifdef GD32V
+    tft.println(F("SPI TFT on GD32V"));
+#else
     tft.println(F("SPI TFT on ESP8266"));
+#endif
     tft.println(F(""));
     tft.setTextSize(1);
     tft.setTextColor(tft.color565(0x80, 0x80, 0x80));
@@ -261,6 +265,7 @@ uint32_t testHaD() {
     //  count =  0nnnnnnn = 1 byte or 1nnnnnnn nnnnnnnn 2 bytes (0 - 32767)
     //  repeat color count times
     //  toggle color1/color2
+    #define HAD_H 128
     static const uint8_t HaD_128x160[] PROGMEM = {
         0x85, 0x91, 0x09, 0x4b, 0x09, 0x24, 0x0a, 0x47, 0x09, 0x27, 0x0a, 0x44, 0x0a, 0x29, 0x0a, 0x42,
         0x0a, 0x2b, 0x0a, 0x41, 0x0a, 0x2c, 0x0a, 0x3e, 0x0b, 0x2f, 0x09, 0x3d, 0x09, 0x32, 0x08, 0x3c,
@@ -306,10 +311,17 @@ uint32_t testHaD() {
     tft.fillScreen(TFT_BLACK);
 
     uint32_t start = micros_start();
+    uint16_t xoff = 0;
+
+    if (HAD_H > LCD_H) {
+        xoff = (HAD_H - LCD_H)/2;
+    }
 
     tft.startWrite();
 
     for (int i = 0; i < 0x10; i++) {
+        uint16_t left = 0;
+        uint16_t top = 0;
         tft.setAddrWindow(0, 0, tft.width(), tft.height());
 
         uint16_t cnt = 0;
@@ -324,7 +336,17 @@ uint32_t testHaD() {
                 cnt = ((cnt & 0x7f) << 8) | pgm_read_byte(cmp++);
             }
 
-            tft.pushColor(curcolor, cnt); // PDQ_GFX has count
+            /* need to skip pixels on small screen */
+            for (int j = 0; j < cnt; j++) {
+                if ((left >= xoff) && (left < LCD_H+xoff)) {
+                    tft.pushColor(curcolor, 1);
+                }
+                left++;
+                if (left >= 128) {
+                    left-=128;
+                    top++;
+                }
+            }
 
             curcolor ^= color;
         }
