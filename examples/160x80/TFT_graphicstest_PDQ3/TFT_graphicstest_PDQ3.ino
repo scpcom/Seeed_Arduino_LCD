@@ -163,7 +163,7 @@ void loop(void) {
     printnice(usecHaD);
 
     tft.setTextColor(TFT_CYAN);
-    tft.print(F("Clr "));
+    tft.print(F("Clear "));
     tft.setTextColor(TFT_YELLOW);
     printnice(usecFillScreen);
 
@@ -376,16 +376,14 @@ uint32_t testHaD() {
 
 uint32_t testFillScreen() {
     uint32_t start = micros_start();
+    // Shortened this tedious test!
+    tft.fillScreen(TFT_WHITE);
+    tft.fillScreen(TFT_RED);
+    tft.fillScreen(TFT_GREEN);
+    tft.fillScreen(TFT_BLUE);
+    tft.fillScreen(TFT_BLACK);
 
-    for (uint8_t i = 0; i < 12; i++) {
-        tft.fillScreen(TFT_WHITE);
-        tft.fillScreen(TFT_RED);
-        tft.fillScreen(TFT_GREEN);
-        tft.fillScreen(TFT_BLUE);
-        tft.fillScreen(TFT_BLACK);
-    }
-
-    return micros() - start;
+    return (micros() - start) / 5;
 }
 
 uint32_t testText() {
