@@ -22,7 +22,7 @@
     #elif defined XPT2046TOUCH
         #include "Extensions/Touch_Drivers/XPT2046/XPT2046.h"
     #else
-        #error Didn't support this Touch yet.
+        #error "Didn't support this Touch yet."
     #endif
 #endif
 
