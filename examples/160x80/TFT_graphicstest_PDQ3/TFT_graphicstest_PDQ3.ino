@@ -264,6 +264,7 @@ uint32_t testHaD() {
     //  count =  0nnnnnnn = 1 byte or 1nnnnnnn nnnnnnnn 2 bytes (0 - 32767)
     //  repeat color count times
     //  toggle color1/color2
+    #define HAD_W 160
     #define HAD_H 128
     static const uint8_t HaD_128x160[] PROGMEM = {
         0x85, 0x91, 0x09, 0x4b, 0x09, 0x24, 0x0a, 0x47, 0x09, 0x27, 0x0a, 0x44, 0x0a, 0x29, 0x0a, 0x42,
@@ -311,9 +312,13 @@ uint32_t testHaD() {
 
     uint32_t start = micros_start();
     uint16_t xoff = 0;
+    uint16_t yoff = 0;
 
     if (HAD_H > LCD_H) {
         xoff = (HAD_H - LCD_H)/2;
+    }
+    if (HAD_W > LCD_W) {
+        yoff = (HAD_W - LCD_W)/2;
     }
 
     tft.startWrite();
@@ -338,10 +343,10 @@ uint32_t testHaD() {
             /* need to skip pixels on small screen */
             uint16_t j = cnt;
             while (j) {
-                if ((left >= xoff) && (left < LCD_H+xoff)) {
+                if ((left >= xoff) && (left < LCD_H+xoff) && (top >= yoff) && (top < LCD_W+yoff)) {
                     uint16_t k = j;
                     if (j>(HAD_H-xoff-left)) k = (HAD_H-xoff-left);
-                    //tft.fillRect(left, top, k, 1, curcolor);
+                    //tft.fillRect(left-xoff, top-yoff, k, 1, curcolor);
                     tft.pushColor(curcolor, k);
                     left+=k;
                     j-=k;
