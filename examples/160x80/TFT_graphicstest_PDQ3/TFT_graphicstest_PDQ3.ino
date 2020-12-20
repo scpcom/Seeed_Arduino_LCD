@@ -337,13 +337,21 @@ uint32_t testHaD() {
             }
 
             /* need to skip pixels on small screen */
-            for (int j = 0; j < cnt; j++) {
+            uint16_t j = cnt;
+            while (j) {
                 if ((left >= xoff) && (left < LCD_H+xoff)) {
-                    tft.pushColor(curcolor, 1);
+                    uint16_t k = j;
+                    if (j>(HAD_H-xoff-left)) k = (HAD_H-xoff-left);
+                    //tft.fillRect(left, top, k, 1, curcolor);
+                    tft.pushColor(curcolor, k);
+                    left+=k;
+                    j-=k;
+                } else {
+                    left+=1;
+                    j-=1;
                 }
-                left++;
-                if (left >= 128) {
-                    left-=128;
+                if (left >= HAD_H) {
+                    left-=HAD_H;
                     top++;
                 }
             }
