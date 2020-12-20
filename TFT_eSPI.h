@@ -159,6 +159,14 @@
 #define tft_Write_16(C) _com.transfer((void *)C, 2)
 #define tft_Write_16S(C) _com.transfer((void *)(C << 8 | C >> 8), 2)
 #define tft_Write_32(C) _com.transfer((void *)C, 4)
+#elif defined(BOARD_SIPEED_LONGAN_NANO)
+#define tft_Write_8(C) _com.transfer(C)
+#define tft_Write_16(C) _com.transfer16(C << 8 | C >> 8);
+#define tft_Write_32(C)                  \
+    _com.transfer(C >> 24);              \
+    _com.transfer((C & 0xFFFFFF) >> 16); \
+    _com.transfer((C & 0xFFFF) >> 8);    \
+    _com.transfer(C & 0xFF)
 #else
 #define tft_Write_8(C) _com.transfer(C)
 #define tft_Write_16(C) _com.transfer16(C);

@@ -4154,6 +4154,10 @@ void writeBlock(uint16_t color, uint32_t repeat) {
 #else
 
 void writeBlock(uint16_t color, uint32_t repeat) {
+#if defined(BOARD_SIPEED_LONGAN_NANO)
+    color = ((uint8_t)color << 8) | (uint8_t)(color >> 8);
+#endif
+
     switch (repeat & 0x7) {
         case 1: repeat &= ~0x07; goto out1;
         case 2: repeat &= ~0x07; goto out2;
