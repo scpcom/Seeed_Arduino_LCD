@@ -2318,7 +2318,7 @@ void TFT_eSPI::drawChar(int32_t x, int32_t y, uint16_t c, uint32_t color, uint32
             GFXglyph* glyph  = &(((GFXglyph*)pgm_read_dword(&gfxFont->glyph))[c]);
             uint8_t*  bitmap = (uint8_t*)pgm_read_dword(&gfxFont->bitmap);
 
-            uint32_t bo = pgm_read_word(&glyph->bitmapOffset);
+            uint32_t bo = pgm_read_dword(&glyph->bitmapOffset);
             uint8_t  w  = pgm_read_byte(&glyph->width),
                      h  = pgm_read_byte(&glyph->height);
             //xa = pgm_read_byte(&glyph->xAdvance);
