@@ -182,6 +182,22 @@
 #define TFT_BACKLIGHT_ON LOW
 #define TFT_NO_EXTENSIONS
 #define TFT_FONT_MAX 4
+#elif (defined(BOARD_SIPEED_MAIX_GO) || defined(BOARD_SIPEED_MAIX_ONE_DOCK) || defined(BOARD_SIPEED_MAIX_DUINO) )
+#undef ILI9341_DRIVER
+#define ST7789_2_DRIVER
+#define K210_ST7789_SIPEED
+#define TFT_RGB_ORDER TFT_RGB
+#define TFT_WIDTH  240
+#define TFT_HEIGHT 320
+#define HASSPI 1
+#define SPICOM spi_
+//#define TFT_SCLK 39
+//#define TFT_CS   36
+//#define TFT_DC   38
+//#define TFT_RST  37
+//#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
+#define TFT_DMA_CH 3
+#define SPI_FREQUENCY 15000000
 #else
     #error "you need to config in USer_Setup.h"
 #endif

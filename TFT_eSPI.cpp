@@ -28,6 +28,8 @@
 
 #if defined(BOARD_SIPEED_LONGAN_NANO)
 SPIClass SPI(TFT_MOSI, TFT_MISO, TFT_SCLK);
+#elif defined(K210_ST7789_SIPEED)
+SPIClass spi_(SPI0); // MUST be SPI0 for Maix series on board LCD
 #endif
 
 #ifdef HASSPI
@@ -2503,6 +2505,9 @@ void TFT_eSPI::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
     #if defined (RPI_ILI9486_DRIVER)
     uint8_t xb[] = { 0, (uint8_t)(x0 >> 8), 0, (uint8_t)(x0 >> 0), 0, (uint8_t)(x1 >> 8), 0, (uint8_t)(x1 >> 0), };
     _com.transfer(&xb[0], 8);
+    #elif defined (K210_ST7789_SIPEED)
+    uint8_t xb[] = { (uint8_t)(x0 >> 8), (uint8_t)(x0 >> 0), (uint8_t)(x1 >> 8), (uint8_t)(x1 >> 0), };
+    _com.transfer(&xb[0], 4);
     #else
     tft_Write_32(SPI_32(x0, x1));
     #endif
@@ -2517,6 +2522,9 @@ void TFT_eSPI::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
     #if defined (RPI_ILI9486_DRIVER)
     uint8_t yb[] = { 0, (uint8_t)(y0 >> 8), 0, (uint8_t)(y0 >> 0), 0, (uint8_t)(y1 >> 8), 0, (uint8_t)(y1 >> 0), };
     _com.transfer(&yb[0], 8);
+    #elif defined (K210_ST7789_SIPEED)
+    uint8_t yb[] = { (uint8_t)(y0 >> 8), (uint8_t)(y0 >> 0), (uint8_t)(y1 >> 8), (uint8_t)(y1 >> 0), };
+    _com.transfer(&yb[0], 4);
     #else
     tft_Write_32(SPI_32(y0, y1));
     #endif
@@ -2606,6 +2614,9 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color) {
         #if defined (RPI_ILI9486_DRIVER)
         uint8_t xb[] = { 0, (uint8_t)(x >> 8), 0, (uint8_t)(x >> 0), 0, (uint8_t)(x >> 8), 0, (uint8_t)(x >> 0), };
         _com.transfer(&xb[0], 8);
+        #elif defined (K210_ST7789_SIPEED)
+        uint8_t xb[] = { (uint8_t)(x >> 8), (uint8_t)(x >> 0), (uint8_t)(x >> 8), (uint8_t)(x >> 0), };
+        _com.transfer(&xb[0], 4);
         #else
         tft_Write_32(SPI_32(x, x));
         #endif
@@ -2625,6 +2636,9 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color) {
         #if defined (RPI_ILI9486_DRIVER)
         uint8_t yb[] = { 0, (uint8_t)(y >> 8), 0, (uint8_t)(y >> 0), 0, (uint8_t)(y >> 8), 0, (uint8_t)(y >> 0), };
         _com.transfer(&xb[0], 8);
+        #elif defined (K210_ST7789_SIPEED)
+        uint8_t yb[] = { (uint8_t)(y >> 8), (uint8_t)(y >> 0), (uint8_t)(y >> 8), (uint8_t)(y >> 0), };
+        _com.transfer(&yb[0], 4);
         #else
         tft_Write_32(SPI_32(y, y));
         #endif
@@ -4154,6 +4168,10 @@ void writeBlock(uint16_t color, uint32_t repeat) {
 #else
 
 void writeBlock(uint16_t color, uint32_t repeat) {
+#ifdef K210_ST7789_SIPEED
+    uint32_t data = ((uint32_t)color << 16) | (uint32_t)color;
+    _com.fillData(&data, repeat);
+#else
 #if defined(BOARD_SIPEED_LONGAN_NANO)
     color = ((uint8_t)color << 8) | (uint8_t)(color >> 8);
 #endif
@@ -4182,6 +4200,7 @@ void writeBlock(uint16_t color, uint32_t repeat) {
     out2: _com.transfer16(color);
     out1: _com.transfer16(color);
     }
+#endif
 }
 #endif
 

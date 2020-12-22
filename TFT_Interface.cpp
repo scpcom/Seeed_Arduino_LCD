@@ -25,6 +25,19 @@
 */
 #include <TFT_Interface.h>
 
+#ifdef K210_ST7789_SIPEED
+#include <st7789.h>
+
+#define SIPEED_ST7789_RST_PIN    37
+#define SIPEED_ST7789_DCX_PIN    38
+#define SIPEED_ST7789_SS_PIN     36
+#define SIPEED_ST7789_SCLK_PIN   39
+
+// default peripheral
+#define SIPEED_ST7789_RST_GPIONUM  6
+#define SIPEED_ST7789_DCX_GPIONUM  7
+#define SIPEED_ST7789_SS           3
+#endif
 
 #ifdef HASSPI
 TFT_Interface::TFT_Interface(SPIClass* spi) {
@@ -41,7 +54,26 @@ TFT_Interface::~TFT_Interface() {
 }
 
 void TFT_Interface::begin() {
-    #ifdef HASSPI
+    #ifdef K210_ST7789_SIPEED
+    uint8_t spiNum = this->_SPI->busId();
+    uint32_t _freq = SPI_FREQUENCY;
+    int8_t _dcxPin = SIPEED_ST7789_DCX_PIN;
+    int8_t _rstPin = SIPEED_ST7789_RST_PIN;
+    uint8_t _dmaCh = TFT_DMA_CH;
+    if( (spi_id_t)spiNum == SPI0)
+    {
+        fpioa_set_function(SIPEED_ST7789_SS_PIN  , (fpioa_function_t)(FUNC_SPI0_SS0 + SIPEED_ST7789_SS));
+        fpioa_set_function(SIPEED_ST7789_SCLK_PIN, (fpioa_function_t)FUNC_SPI0_SCLK);
+    }
+    else if((spi_id_t)spiNum == SPI1)
+    {
+        fpioa_set_function(SIPEED_ST7789_SS_PIN  , (fpioa_function_t)(FUNC_SPI1_SS0 + SIPEED_ST7789_SS));
+        fpioa_set_function(SIPEED_ST7789_SCLK_PIN, (fpioa_function_t)FUNC_SPI1_SCLK);
+    }
+    sysctl_set_spi0_dvp_data(1);
+
+    tft_hard_init(spiNum, SIPEED_ST7789_SS, SIPEED_ST7789_RST_GPIONUM, SIPEED_ST7789_DCX_GPIONUM, _freq, _rstPin,  _dcxPin, _dmaCh);
+    #elif HASSPI
     this->_SPI->begin();
     #else
     interface_begin();
@@ -50,7 +82,9 @@ void TFT_Interface::begin() {
 }
 
 void TFT_Interface::end() {
-    #ifdef HASSPI
+    #ifdef K210_ST7789_SIPEED
+    // todo
+    #elif HASSPI
     this->_SPI->end();
     #else
     interface_end();
@@ -60,7 +94,10 @@ void TFT_Interface::end() {
 
 
 byte TFT_Interface::transfer(uint8_t data) {
-    #ifdef HASSPI
+    #ifdef K210_ST7789_SIPEED
+    tft_write_byte(&data, 1);
+    return data;
+    #elif HASSPI
     return this->_SPI->transfer(data);
     #else
     return interface_transfer(data);
@@ -68,14 +105,19 @@ byte TFT_Interface::transfer(uint8_t data) {
 }
 
 uint16_t TFT_Interface::transfer16(uint16_t data) {
-    #ifdef HASSPI
+    #ifdef K210_ST7789_SIPEED
+    tft_write_half(&data, 1);
+    return data;
+    #elif HASSPI
     return this->_SPI->transfer16(data);
     #else
     return interface_transfer16(data);
     #endif
 }
 void TFT_Interface::transfer(void* buf, size_t count) {
-    #ifdef HASSPI
+    #ifdef K210_ST7789_SIPEED
+    tft_write_byte((uint8_t *)buf, count);
+    #elif HASSPI
     return this->_SPI->transfer(buf, count);
     #else
     return interface_transfer(buf, count);
@@ -93,10 +135,14 @@ void TFT_Interface::transfer(const void* txbuf, void* rxbuf, size_t count, bool 
 
 #ifdef HASSPI
 void TFT_Interface::beginTransaction(SPISettings settings) {
+#ifndef K210_ST7789_SIPEED
     this->_SPI->beginTransaction(settings);
+#endif
 }
 void TFT_Interface::endTransaction() {
+#ifndef K210_ST7789_SIPEED
     this->_SPI->endTransaction();
+#endif
 }
 #else
 void TFT_Interface::beginTransaction() {
@@ -108,7 +154,9 @@ void TFT_Interface::endTransaction() {
 #endif
 
 void TFT_Interface::writeCommand(uint8_t c) {
-    #ifdef HASSPI
+    #ifdef K210_ST7789_SIPEED
+    tft_write_command(c);
+    #elif HASSPI
     DC_C;
     transfer(c);
     #else
@@ -124,3 +172,9 @@ void TFT_Interface::writeData(uint8_t d) {
     interface_writeData(d);
     #endif
 }
+
+#ifdef K210_ST7789_SIPEED
+void TFT_Interface::fillData(uint32_t *buf, size_t count) {
+    tft_fill_data(buf, count);
+}
+#endif

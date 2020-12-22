@@ -70,6 +70,9 @@ extern void interface_writeData(uint8_t d);
     #else
         #include <SPI.h>
     #endif
+    #ifdef K210_ST7789_SIPEED
+    extern SPIClass spi_;
+    #endif
 #endif
 
 class TFT_Interface {
@@ -96,6 +99,9 @@ class TFT_Interface {
     void transfer(void* buf, size_t count);
     #if defined (__SAMD51__)
     void transfer(const void* txbuf, void* rxbuf, size_t count, bool block = true);
+    #endif
+    #ifdef K210_ST7789_SIPEED
+    void fillData(uint32_t *buf, size_t count);
     #endif
   private:
     #ifdef HASSPI

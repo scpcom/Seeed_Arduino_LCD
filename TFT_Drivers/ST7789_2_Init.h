@@ -12,7 +12,9 @@
         TFT_MADCTL, 1, 0x00,
         TFT_CASET, 4, 0x00, 0x00, 0x00, 0xF0,
         TFT_PASET, 4, 0x00, 0x00, 0x00, 0xF0,
+#ifndef K210_ST7789_SIPEED
         TFT_INVON, TFT_INIT_DELAY, 10,
+#endif
         TFT_NORON, TFT_INIT_DELAY, 10,
         TFT_DISPON, TFT_INIT_DELAY, 255
     };
