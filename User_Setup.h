@@ -198,6 +198,7 @@
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 #define TFT_DMA_CH 3
 #define SPI_FREQUENCY 15000000
+#define TFT_ONE_WRITE_PER_WINDOW
 #else
     #error "you need to config in USer_Setup.h"
 #endif
