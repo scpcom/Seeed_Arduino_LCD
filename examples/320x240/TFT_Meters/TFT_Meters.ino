@@ -248,7 +248,7 @@ void plotNeedle(int value, byte ms_delay) {
 // #########################################################################
 //  Draw a linear meter on the screen
 // #########################################################################
-void plotLinear(char* label, int x, int y) {
+void plotLinear(const char* label, int x, int y) {
     int w = 36;
     tft.drawRect(x, y, w, 155, TFT_GREY);
     tft.fillRect(x + 2, y + 19, w - 3, 155 - 38, TFT_WHITE);
