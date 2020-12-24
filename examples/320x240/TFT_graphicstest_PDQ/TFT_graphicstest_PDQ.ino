@@ -219,7 +219,11 @@ void loop(void) {
 
 void printnice(int32_t v) {
     char	str[32] = { 0 };
-    sprintf(str, "%lu", v);
+#ifdef K210
+    sprintf(str, "%d", v);
+#else
+    sprintf(str, "%ld", v);
+#endif
     for (char* p = (str + strlen(str)) - 3; p > str; p -= 3) {
         memmove(p + 1, p, strlen(p) + 1);
         *p = ',';
