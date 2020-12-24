@@ -31,7 +31,7 @@ void setup() {
     randomSeed(analogRead(A0));
     tft.init();
     tft.setRotation(2);
-    tft.fillScreen(ILI9341_BLACK);
+    tft.fillScreen(TFT_BLACK);
     setupScrollArea(TOP_FIXED_AREA, BOT_FIXED_AREA);
 }
 
@@ -48,9 +48,9 @@ void loop(void) {
             if ((random(20) == 1) && (j < 400)) {
                 pos[i] = 63;    // ~1 in 20 probability of a new character
             }
-            tft.setTextColor(pos[i] << 5, ILI9341_BLACK); // Set the green character brightness
+            tft.setTextColor(pos[i] << 5, TFT_BLACK); // Set the green character brightness
             if (pos[i] == 63) {
-                tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);    // Draw white character
+                tft.setTextColor(TFT_WHITE, TFT_BLACK);    // Draw white character
             }
             xPos += tft.drawChar(random(32, 128), xPos, yDraw, 1); // Draw the character
         }
@@ -59,7 +59,7 @@ void loop(void) {
     }
 
     tft.setRotation(2);
-    tft.setTextColor(63 << 5, ILI9341_BLACK);
+    tft.setTextColor(63 << 5, TFT_BLACK);
     tft.drawCentreString("Matrix",120,60,4);
     tft.setRotation(0);
 
@@ -73,7 +73,8 @@ void loop(void) {
 
 void setupScrollArea(uint16_t TFA, uint16_t BFA) {
     tft.startWrite();
-    tft.writecommand(ILI9341_VSCRDEF); // Vertical scroll definition
+    tft.writecommand(TFT_VSCRDEF); // Vertical scroll definition
+    // todo: platforms like K210 may need swap bytes on writedata
     tft.writedata(TFA >> 8);
     tft.writedata(TFA);
     tft.writedata((320 - TFA - BFA) >> 8);
@@ -100,7 +101,8 @@ int scroll_slow(int lines, int wait) {
 
 void scrollAddress(uint16_t VSP) {
     tft.startWrite();
-    tft.writecommand(ILI9341_VSCRSADD); // Vertical scrolling start address
+    tft.writecommand(TFT_VSCRSADD); // Vertical scrolling start address
+    // todo: platforms like K210 may need swap bytes on writedata
     tft.writedata(VSP >> 8);
     tft.writedata(VSP);
     tft.endWrite();
