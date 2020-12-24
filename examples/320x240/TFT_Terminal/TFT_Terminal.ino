@@ -131,7 +131,7 @@ int scroll_line() {
 // ##############################################################################################
 // We are using a hardware feature of the display, so we can only scroll in portrait orientation
 void setupScrollArea(uint16_t tfa, uint16_t bfa) {
-    tft.writecommand(ILI9341_VSCRDEF); // Vertical scroll definition
+    tft.writecommand(TFT_VSCRDEF); // Vertical scroll definition
     tft.writedata(tfa >> 8);           // Top Fixed Area line count
     tft.writedata(tfa);
     tft.writedata((YMAX - tfa - bfa) >> 8); // Vertical Scrolling Area line count
@@ -144,7 +144,7 @@ void setupScrollArea(uint16_t tfa, uint16_t bfa) {
 // Setup the vertical scrolling start address pointer
 // ##############################################################################################
 void scrollAddress(uint16_t vsp) {
-    tft.writecommand(ILI9341_VSCRSADD); // Vertical scrolling pointer
+    tft.writecommand(TFT_VSCRSADD); // Vertical scrolling pointer
     tft.writedata(vsp >> 8);
     tft.writedata(vsp);
 }
