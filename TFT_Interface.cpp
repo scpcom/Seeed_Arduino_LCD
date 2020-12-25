@@ -106,7 +106,8 @@ byte TFT_Interface::transfer(uint8_t data) {
 
 uint16_t TFT_Interface::transfer16(uint16_t data) {
     #ifdef K210_ST7789_SIPEED
-    tft_write_half(&data, 1);
+    uint32_t w = ((uint32_t)data << 16) | (uint32_t)data;
+    tft_fill_data(&w, 2);
     return data;
     #elif HASSPI
     return this->_SPI->transfer16(data);
@@ -175,6 +176,7 @@ void TFT_Interface::writeData(uint8_t d) {
 
 #ifdef K210_ST7789_SIPEED
 void TFT_Interface::fillData(uint32_t *buf, size_t count) {
-    tft_fill_data(buf, count);
+    size_t aligned_len = (count + 3) & ~3;
+    tft_fill_data(buf, aligned_len/2);
 }
 #endif
