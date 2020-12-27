@@ -225,10 +225,9 @@ void TFT_Interface::setFbWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1) 
 }
 
 void TFT_Interface::pushBack(uint16_t data) {
-    if (_width > _height) {
-        _bufData[_buf_x][_buf_y] = SWAP_16(data);
-    } else {
-        _bufData[_buf_y][_buf_x] = SWAP_16(data);
+    int32_t i = (_buf_y*_width)+_buf_x;
+    if ((_buf_x >= 0) && (_buf_y >= 0) && (i < _width*_height)) {
+        _bufData[(_buf_y*_width)+_buf_x] = SWAP_16(data);
     }
     _bufOffset++;
     _buf_x++;

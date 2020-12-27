@@ -114,14 +114,14 @@ class TFT_Interface {
     #endif
     #ifdef TFT_FB_MIN_PIXELS
     uint32_t _bufOffset;
-    uint16_t _bufData[TFT_HEIGHT][TFT_WIDTH];
-    uint16_t _buf_x;
-    uint16_t _buf_y;
-    uint16_t _x0;
-    uint16_t _y0;
-    uint16_t _x1;
-    uint16_t _y1;
-    uint32_t _winSize;
+    uint16_t _bufData[TFT_HEIGHT*TFT_WIDTH];
+    int32_t _buf_x;
+    int32_t _buf_y;
+    int32_t _x0;
+    int32_t _y0;
+    int32_t _x1;
+    int32_t _y1;
+    int32_t _winSize;
     int32_t _width;
     int32_t _height;
     bool _bufTransaction;
