@@ -189,6 +189,7 @@
 #define TFT_RGB_ORDER TFT_RGB
 #define TFT_WIDTH  240
 #define TFT_HEIGHT 320
+#define TFT_FB_MIN_PIXELS (TFT_WIDTH*TFT_HEIGHT/2)
 #define HASSPI 1
 #define SPICOM spi_
 //#define TFT_SCLK 39
@@ -198,7 +199,10 @@
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to RST or 3.3V
 #define TFT_DMA_CH 3
 #define SPI_FREQUENCY 15000000
-#define TFT_ONE_WRITE_PER_WINDOW
+// #define TFT_ONE_WRITE_PER_WINDOW
+#ifndef SPI_HAS_TRANSACTION
+#define SPI_HAS_TRANSACTION
+#endif
 #else
     #error "you need to config in USer_Setup.h"
 #endif

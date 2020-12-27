@@ -100,11 +100,30 @@ class TFT_Interface {
     #if defined (__SAMD51__)
     void transfer(const void* txbuf, void* rxbuf, size_t count, bool block = true);
     #endif
+    #ifdef TFT_FB_MIN_PIXELS
+    void setFrameSize(int32_t width, int32_t height);
+    void setFbWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1);
+    void pushBack(uint16_t data);
+    #endif
     #ifdef K210_ST7789_SIPEED
     void fillData(uint32_t *buf, size_t count);
     #endif
   private:
     #ifdef HASSPI
     SPIClass* _SPI;
+    #endif
+    #ifdef TFT_FB_MIN_PIXELS
+    uint32_t _bufOffset;
+    uint16_t _bufData[TFT_HEIGHT][TFT_WIDTH];
+    uint16_t _buf_x;
+    uint16_t _buf_y;
+    uint16_t _x0;
+    uint16_t _y0;
+    uint16_t _x1;
+    uint16_t _y1;
+    uint32_t _winSize;
+    int32_t _width;
+    int32_t _height;
+    bool _bufTransaction;
     #endif
 };

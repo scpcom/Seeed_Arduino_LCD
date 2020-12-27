@@ -466,6 +466,9 @@ void TFT_eSPI::setRotation(uint8_t m) {
     delayMicroseconds(10);
 
     com_end();
+#ifdef TFT_FB_MIN_PIXELS
+    _com.setFrameSize(_width, _height);
+#endif
 
     addr_row = 0xFFFF;
     addr_col = 0xFFFF;
@@ -2489,6 +2492,16 @@ void TFT_eSPI::setAddrWindow(int32_t x0, int32_t y0, int32_t w, int32_t h) {
 // Chip select stays low, call com_begin first. Use setAddrWindow() from sketches
 void TFT_eSPI::setWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
     //com_begin(); // Must be called before setWimdow
+#ifdef TFT_FB_MIN_PIXELS
+    _com.setFbWindow(x0, y0, x1, y1);
+
+    if ((x1+1-x0)*(y1+1-y0) >= TFT_FB_MIN_PIXELS) {
+        x0 = 0;
+        x1 = _width-1;
+        y0 = 0;
+        y1 = _height-1;
+    }
+#endif
 
     addr_col = 0xFFFF;
     addr_row = 0xFFFF;
@@ -2610,6 +2623,9 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color) {
 
     // No need to send x if it has not changed (speeds things up)
     if (addr_col != x) {
+#ifdef TFT_FB_MIN_PIXELS
+        _com.setFbWindow(x, y, x, y);
+#endif
 
         writecommand(TFT_CASET);
 
@@ -2632,6 +2648,9 @@ void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color) {
 
     // No need to send y if it has not changed (speeds things up)
     if (addr_row != y) {
+#ifdef TFT_FB_MIN_PIXELS
+        _com.setFbWindow(x, y, x, y);
+#endif
 
         writecommand(TFT_PASET);
 

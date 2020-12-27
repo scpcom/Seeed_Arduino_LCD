@@ -39,6 +39,8 @@
 #define SIPEED_ST7789_SS           3
 #endif
 
+#define SWAP_16(x) ((x >> 8 & 0xff) | (x << 8))
+
 #ifdef HASSPI
 TFT_Interface::TFT_Interface(SPIClass* spi) {
     this->_SPI = spi;
@@ -78,6 +80,13 @@ void TFT_Interface::begin() {
     #else
     interface_begin();
     #endif
+#ifdef TFT_FB_MIN_PIXELS
+    _bufOffset = 0;
+    _bufTransaction = false;
+    _buf_x = 0;
+    _buf_y = 0;
+    _winSize = 0;
+#endif
     return;
 }
 
@@ -105,14 +114,24 @@ byte TFT_Interface::transfer(uint8_t data) {
 }
 
 uint16_t TFT_Interface::transfer16(uint16_t data) {
+    #ifdef TFT_FB_MIN_PIXELS
+    if (_bufTransaction) {
+      pushBack(data);
+    }
+    if (_winSize < TFT_FB_MIN_PIXELS) {
+    #endif
     #ifdef K210_ST7789_SIPEED
-    uint32_t w = ((uint32_t)data << 16) | (uint32_t)data;
-    tft_fill_data(&w, 2);
-    return data;
+      uint32_t w = ((uint32_t)data << 16) | (uint32_t)data;
+      tft_fill_data(&w, 2);
+      return data;
     #elif HASSPI
-    return this->_SPI->transfer16(data);
+      return this->_SPI->transfer16(data);
     #else
-    return interface_transfer16(data);
+      return interface_transfer16(data);
+    #endif
+    #ifdef TFT_FB_MIN_PIXELS
+    }
+    return data;
     #endif
 }
 void TFT_Interface::transfer(void* buf, size_t count) {
@@ -136,11 +155,22 @@ void TFT_Interface::transfer(const void* txbuf, void* rxbuf, size_t count, bool 
 
 #ifdef HASSPI
 void TFT_Interface::beginTransaction(SPISettings settings) {
+#ifdef TFT_FB_MIN_PIXELS
+    _bufTransaction = true;
+#endif
 #ifndef K210_ST7789_SIPEED
     this->_SPI->beginTransaction(settings);
 #endif
 }
 void TFT_Interface::endTransaction() {
+#ifdef TFT_FB_MIN_PIXELS
+    _bufTransaction = false;
+    if ((_bufOffset > 0) && (_winSize >= TFT_FB_MIN_PIXELS)) {
+        tft_write_byte((uint8_t *)&_bufData, _width*_height*2);
+	_winSize = 0;
+	_bufOffset = 0;
+    }
+#endif
 #ifndef K210_ST7789_SIPEED
     this->_SPI->endTransaction();
 #endif
@@ -174,9 +204,56 @@ void TFT_Interface::writeData(uint8_t d) {
     #endif
 }
 
+#ifdef TFT_FB_MIN_PIXELS
+void TFT_Interface::setFrameSize(int32_t width, int32_t height) {
+    _width = width;
+    _height = height;
+}
+
+void TFT_Interface::setFbWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
+    if (_winSize >= TFT_FB_MIN_PIXELS) {
+        endTransaction();
+    }
+    _bufTransaction = true;
+    _x0 = x0;
+    _y0 = y0;
+    _x1 = x1;
+    _y1 = y1;
+    _buf_x = x0;
+    _buf_y = y0;
+    _winSize = (_x1+1-_x0)*(_y1+1-_y0);
+}
+
+void TFT_Interface::pushBack(uint16_t data) {
+    if (_width > _height) {
+        _bufData[_buf_x][_buf_y] = SWAP_16(data);
+    } else {
+        _bufData[_buf_y][_buf_x] = SWAP_16(data);
+    }
+    _bufOffset++;
+    _buf_x++;
+    if (_buf_x > _x1) {
+        _buf_x = _x0;
+        _buf_y++;
+    }
+}
+#endif
+
 #ifdef K210_ST7789_SIPEED
 void TFT_Interface::fillData(uint32_t *buf, size_t count) {
     size_t aligned_len = (count + 3) & ~3;
-    tft_fill_data(buf, aligned_len/2);
+#ifdef TFT_FB_MIN_PIXELS
+    if (_bufTransaction) {
+        while (count) {
+            pushBack(*(uint16_t *)buf);
+	    count--;
+        }
+    }
+    if (_winSize < TFT_FB_MIN_PIXELS) {
+#endif
+        tft_fill_data(buf, aligned_len/2);
+#ifdef TFT_FB_MIN_PIXELS
+    }
+#endif
 }
 #endif
