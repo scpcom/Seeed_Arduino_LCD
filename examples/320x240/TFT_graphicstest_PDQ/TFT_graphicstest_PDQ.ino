@@ -18,9 +18,6 @@
 // Use hardware SPI
 TFT_eSPI tft = TFT_eSPI();
 
-#define LCD_H TFT_WIDTH
-#define LCD_W TFT_HEIGHT
-
 unsigned long total = 0;
 unsigned long tn = 0;
 void setup() {
@@ -251,8 +248,6 @@ uint32_t testHaD() {
     // 	count =  0nnnnnnn = 1 byte or 1nnnnnnn nnnnnnnn 2 bytes (0 - 32767)
     // 	repeat color count times
     // 	toggle color1/color2
-    #define HAD_W 320
-    #define HAD_H 240
     static const uint8_t HaD_240x320[] PROGMEM = {
         0xb9, 0x50, 0x0e, 0x80, 0x93, 0x0e, 0x41, 0x11, 0x80, 0x8d, 0x11, 0x42, 0x12, 0x80, 0x89, 0x12,
         0x45, 0x12, 0x80, 0x85, 0x12, 0x48, 0x12, 0x80, 0x83, 0x12, 0x4a, 0x13, 0x7f, 0x13, 0x4c, 0x13,
@@ -337,25 +332,9 @@ uint32_t testHaD() {
     tft.fillScreen(TFT_BLACK);
 
     uint32_t start = micros_start();
-#ifdef TFT_ONE_WRITE_PER_WINDOW
-    uint16_t xoff = 0;
-    uint16_t yoff = 0;
-
-    if (HAD_H > LCD_H) {
-        xoff = (HAD_H - LCD_H)/2;
-    }
-    if (HAD_W > LCD_W) {
-        yoff = (HAD_W - LCD_W)/2;
-    }
-#endif
 
     for (int i = 0; i < 0x10; i++) {
-#ifdef TFT_ONE_WRITE_PER_WINDOW
-        uint16_t left = 0;
-        uint16_t top = 0;
-#else
         tft.setAddrWindow(0, 0, 240, 320);
-#endif
 
         uint16_t cnt = 0;
         uint16_t color = tft.color565((i << 4) | i, (i << 4) | i, (i << 4) | i);
@@ -369,30 +348,7 @@ uint32_t testHaD() {
             if (cnt & 0x80) {
                 cnt = ((cnt & 0x7f) << 8) | pgm_read_byte(cmp++);
             }
-
-#ifdef TFT_ONE_WRITE_PER_WINDOW
-            uint16_t j = cnt;
-            while (j) {
-                if ((left >= xoff) && (left < LCD_H+xoff) && (top >= yoff) && (top < LCD_W+yoff)) {
-                    uint16_t k = j;
-                    if (j>(HAD_H-xoff-left)) k = (HAD_H-xoff-left);
-                    tft.setAddrWindow(left-xoff, top-yoff, left-xoff+k-1, top-yoff);
-                    tft.pushColor(curcolor, k);
-                    left+=k;
-                    j-=k;
-                } else {
-                    left+=1;
-                    j-=1;
-                }
-                if (left >= HAD_H) {
-                    left-=HAD_H;
-                    top++;
-                }
-            }
-#else
             tft.pushColor(curcolor, cnt);	// PDQ_GFX has count
-#endif
-
             curcolor ^= color;
         }
         tft.endWrite();
