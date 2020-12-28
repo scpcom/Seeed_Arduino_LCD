@@ -2248,6 +2248,7 @@ void TFT_eSPI::drawChar(int32_t x, int32_t y, uint16_t c, uint32_t color, uint32
 
         boolean fillbg = (bg != color);
 
+#ifndef TFT_ONE_WRITE_PER_WINDOW
         if ((size == 1) && fillbg) {
             uint8_t column[6];
             uint8_t mask = 0x1;
@@ -2273,6 +2274,7 @@ void TFT_eSPI::drawChar(int32_t x, int32_t y, uint16_t c, uint32_t color, uint32
             }
             com_end();
         } else {
+#endif
             //com_begin();          // Sprite class can use this function, avoiding com_begin()
             inTransaction = true;
             for (int8_t i = 0; i < 6; i++) {
@@ -2303,7 +2305,9 @@ void TFT_eSPI::drawChar(int32_t x, int32_t y, uint16_t c, uint32_t color, uint32
             }
             inTransaction = false;
             com_end();              // Does nothing if Sprite class uses this function
+#ifndef TFT_ONE_WRITE_PER_WINDOW
         }
+#endif
 
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>
         #ifdef LOAD_GFXFF
