@@ -3590,7 +3590,6 @@ int16_t TFT_eSPI::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t font)
             int32_t pc = 0; // Pixel count
             uint8_t np = textsize * textsize; // Number of pixels in a drawn pixel
 
-            uint8_t tnp = 0; // Temporary copy of np for while loop
             uint8_t ts = textsize - 1; // Temporary copy of textsize
             // 16 bit pixel count so maximum font size is equivalent to 180x180 pixels in area
             // w is total number of pixels to plot to fill character block
@@ -3609,15 +3608,12 @@ int16_t TFT_eSPI::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t font)
                     }
                     while (line--) { // In this case the while(line--) is faster
                         pc++; // This is faster than putting pc+=line before while()?
-                        setWindow(px, py, px + ts, py + ts);
 
                         if (ts) {
-                            tnp = np;
-                            while (tnp--) {
-                                tft_Write_16(textcolor);
-                            }
+                            setWindow(px, py, px + ts, py + ts);
+                            pushColor(textcolor, np);
                         } else {
-                            tft_Write_16(textcolor);
+                            drawPixel(px, py, textcolor);
                         }
                         px += textsize;
 
