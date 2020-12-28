@@ -2289,6 +2289,10 @@ void TFT_eSPI::drawChar(int32_t x, int32_t y, uint16_t c, uint32_t color, uint32
                     for (int8_t j = 0; j < 8; j++) {
                         if (line & 0x1) {
                             drawPixel(x + i, y + j, color);
+#ifdef TFT_ONE_WRITE_PER_WINDOW
+                        } else if (fillbg) {
+                            drawPixel(x + i, y + j, bg);
+#endif
                         }
                         line >>= 1;
                     }
