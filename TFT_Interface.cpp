@@ -28,15 +28,21 @@
 #ifdef K210_ST7789_SIPEED
 #include <st7789.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern int8_t setSs(uint8_t spi, int8_t pin);
+extern int8_t getSsByPin(uint8_t spi, int8_t pin);
+
+#ifdef __cplusplus
+}
+#endif
+
 #define SIPEED_ST7789_RST_PIN    37
 #define SIPEED_ST7789_DCX_PIN    38
 #define SIPEED_ST7789_SS_PIN     36
 #define SIPEED_ST7789_SCLK_PIN   39
-
-// default peripheral
-#define SIPEED_ST7789_RST_GPIONUM  6
-#define SIPEED_ST7789_DCX_GPIONUM  7
-#define SIPEED_ST7789_SS           3
 #endif
 
 #define SWAP_16(x) ((x >> 8 & 0xff) | (x << 8))
@@ -64,17 +70,20 @@ void TFT_Interface::begin() {
     uint8_t _dmaCh = TFT_DMA_CH;
     if( (spi_id_t)spiNum == SPI0)
     {
-        fpioa_set_function(SIPEED_ST7789_SS_PIN  , (fpioa_function_t)(FUNC_SPI0_SS0 + SIPEED_ST7789_SS));
+        fpioa_set_function(SIPEED_ST7789_SS_PIN  , (fpioa_function_t)(FUNC_SPI0_SS0 + setSs(spiNum, SIPEED_ST7789_SS_PIN)));
         fpioa_set_function(SIPEED_ST7789_SCLK_PIN, (fpioa_function_t)FUNC_SPI0_SCLK);
     }
     else if((spi_id_t)spiNum == SPI1)
     {
-        fpioa_set_function(SIPEED_ST7789_SS_PIN  , (fpioa_function_t)(FUNC_SPI1_SS0 + SIPEED_ST7789_SS));
+        fpioa_set_function(SIPEED_ST7789_SS_PIN  , (fpioa_function_t)(FUNC_SPI1_SS0 + setSs(spiNum, SIPEED_ST7789_SS_PIN)));
         fpioa_set_function(SIPEED_ST7789_SCLK_PIN, (fpioa_function_t)FUNC_SPI1_SCLK);
     }
+    uint8_t _ss = getSsByPin(spiNum, SIPEED_ST7789_SS_PIN);
+    int8_t _rst = get_gpio(_rstPin);
+    int8_t _dcx = get_gpio(_dcxPin);
     sysctl_set_spi0_dvp_data(1);
 
-    tft_hard_init(spiNum, SIPEED_ST7789_SS, SIPEED_ST7789_RST_GPIONUM, SIPEED_ST7789_DCX_GPIONUM, _freq, _rstPin,  _dcxPin, _dmaCh);
+    tft_hard_init(spiNum, _ss, _rst, _dcx, _freq, _rstPin,  _dcxPin, _dmaCh);
     #elif HASSPI
     this->_SPI->begin();
     #else
